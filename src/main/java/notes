@@ -61,3 +61,18 @@ parametry:
     wariant mutacji (wyjaśnione w sekcji poniżej),
     długość genomu zwierzaków,
     wariant zachowania zwierzaków (wyjaśnione w sekcji poniżej)
+
+
+
+nieskonczona petla w world dopoki zwierzeta zyją
+    funkcja dzien() ktora robi wszystko co sie w danym dniu dzieje
+
+
+Ania Ś:
+    animal
+    grass
+    directions
+    optionparser
+
+Ania G:
+    mapy
