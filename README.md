@@ -1,11 +1,16 @@
 # projekt1_po
-class Animal
-    energia (zjedzenie rosliny -> +energia) - startowo defaultowo chyba że dziecko to obliczana
-    genon o długości N
-    ilosc dzieci
-    wiek - ilosc dni
-    isHealthy - stała do robienia dzieciaka
 
+class Animal
+
+    energia (zjedzenie rosliny -> +energia) - startowo defaultowo chyba że dziecko to obliczana
+
+    genon o długości N
+    
+    ilosc dzieci
+    
+    wiek - ilosc dni
+    
+    isHealthy - stała do robienia dzieciaka
 
     funkcja move(gen) - jeden ruch(gen z genomu) na dzien
         pelna predestynacja - geny pokolei
@@ -13,11 +18,16 @@ class Animal
 
 
 directions
+
     zakres ruchów
-        0 - bez zmian
-        1 - 45stopni
-        2 - 90stopni
-        ... 7
+    
+    0 - bez zmian
+    
+    1 - 45stopni
+    
+    2 - 90stopni
+    
+    ... 7
 
 
 
@@ -26,18 +36,26 @@ class Plants
 
 rectangular map (wysokosc, szerokosc, startowa liczba roslin, startowa liczba zwierzakow,)
 
-    ogarnac dwa tryby bounduary
-        kula ziemska
-        piekielny portal
+ogarnac dwa tryby bounduary
+
+    kula ziemska
+    
+    piekielny portal
+    
     jungla i stepy - uwzglendienia kategorii pol 80/20 %:
+
         zalesione rowniki
+    
         toksyczne trupy
 
     place animal
+    
     dead animal
+    
     add plants(n - liczba roslin wyrastajaca kazdego dnia) - zajmuja maks 20% mapy
 
     jedzenie roslin przez zwierze
+    
     rozmazanie - czesc energii przechodzi na dziecko procentowo od kazdego rodzica(x 75% , y 25% sumarycznej energii
         tyle procentowo ze swoich genomow rodzice oddaja dziecku) + wylosowanie strony pobierania genomu od silniejszego
         rodzica, slabszy - przeciwna, tak samo procentowo
@@ -48,19 +66,33 @@ rectangular map (wysokosc, szerokosc, startowa liczba roslin, startowa liczba zw
 
 
 parametry:
+
     wysokość i szerokość mapy,
+    
     wariant mapy (wyjaśnione w sekcji poniżej),
+    
     startowa liczba roślin,
+    
     energia zapewniana przez zjedzenie jednej rośliny,
+    
     liczba roślin wyrastająca każdego dnia,
+    
     wariant wzrostu roślin (wyjaśnione w sekcji poniżej),
+    
     startowa liczba zwierzaków,
+    
     startowa energia zwierzaków,
+    
     energia konieczna, by uznać zwierzaka za najedzonego (i gotowego do rozmnażania),
+    
     energia rodziców zużywana by stworzyć potomka,
+    
     minimalna i maksymalna liczba mutacji u potomków (może być równa 0),
+    
     wariant mutacji (wyjaśnione w sekcji poniżej),
+    
     długość genomu zwierzaków,
+    
     wariant zachowania zwierzaków (wyjaśnione w sekcji poniżej)
 
 
@@ -73,23 +105,40 @@ do przemyslenia:
         szukanie zwierzat na danej pozycji zwraca liste tych zwierzat
 
 Ania Ś:
+
     animal - getElementName - zob. nazwy w resources
+    
     grass
+    
     movedirections
+    
     optionparser
+    
     mapdirection
 
+
 Ania G:
+    
     vector2d - ok
+    
     abstractworldmap
+    
     grassfield -
         zalesione rowniki - ok
         toksyczne trupy - ??
+    
     interfejsy
+    
     mapboundary
+    
     mapvisualizer
+    
     simulationengine
+    
     simulationenginegui
+    
     app
+    
     guielementbox
+    
     resources
