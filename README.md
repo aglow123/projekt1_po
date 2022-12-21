@@ -1,5 +1,7 @@
 # projekt1_po
 
+https://github.com/apohllo/obiektowe-lab/tree/master/proj1
+
 class Animal
 
     energia (zjedzenie rosliny -> +energia) - startowo defaultowo chyba że dziecko to obliczana
