@@ -63,16 +63,32 @@ parametry:
     wariant zachowania zwierzaków (wyjaśnione w sekcji poniżej)
 
 
+do przemyslenia:
+    nieskonczona petla w world dopoki zwierzeta zyją
+        funkcja dzien() ktora robi wszystko co sie w danym dniu dzieje
 
-nieskonczona petla w world dopoki zwierzeta zyją
-    funkcja dzien() ktora robi wszystko co sie w danym dniu dzieje
-
+    animals trzymane w slowniku ale chyba <Vector2d, Animal[]>
+        dodawanie(usuwanie z) do listy zwierzat na danej pozycji
+        szukanie zwierzat na danej pozycji zwraca liste tych zwierzat
 
 Ania Ś:
-    animal
+    animal - getElementName - zob. nazwy w resources
     grass
-    directions
+    movedirections
     optionparser
+    mapdirection
 
 Ania G:
-    mapy
+    vector2d - ok
+    abstractworldmap
+    grassfield -
+        zalesione rowniki - ok
+        toksyczne trupy - ??
+    interfejsy
+    mapboundary
+    mapvisualizer
+    simulationengine
+    simulationenginegui
+    app
+    guielementbox
+    resources
