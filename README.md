@@ -11,6 +11,8 @@ class Animal
     ilosc dzieci
     
     wiek - ilosc dni
+
+    isAlive ??
     
     isHealthy - stała do robienia dzieciaka
 

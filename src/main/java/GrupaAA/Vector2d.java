@@ -1,12 +1,12 @@
-package main.java.GrupaAA;
+package GrupaAA;
 
 import java.util.Objects;
 
 public class Vector2d {
-    public double x;
-    public double y;
+    public int x;
+    public int y;
 
-    public Vector2d(double x, double y){
+    public Vector2d(int x, int y){
         this.x = x;
         this.y = y;
     }
