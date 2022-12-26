@@ -8,13 +8,15 @@ public class Genotypes {
     public int[] genotypes;
 
     public Genotypes(){
+
         this.genotypes = new int[n];
+        genGenerator();
     }
     public int intGenerator(int max){
         Random generator = new Random();
         return generator.nextInt(max);
     }
-    public void GenGenerator(){
+    public void genGenerator(){
         for(int i = 0; i< genotypes.length; i++){
             genotypes[i] = intGenerator(8);
         }

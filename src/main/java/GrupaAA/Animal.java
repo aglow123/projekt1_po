@@ -12,6 +12,9 @@ public class Animal implements IMapElement {
     private MapDirection orientation;
     private Vector2d position;
     private IWorldMap map;
+    private int age;
+    boolean isAlive;
+    private int childeren;
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(IWorldMap map){
@@ -24,6 +27,9 @@ public class Animal implements IMapElement {
         this.map = map;
         this.HP = HP;
         this.animalGens = genotypes.genotypes;
+        this.age = 0;
+        this.childeren = 0;
+        this.isAlive = true;
         map.place(this);
     }
 
@@ -45,16 +51,34 @@ public class Animal implements IMapElement {
     public Vector2d getPosition(){return this.position;}
     @Override
     public String getElementName() {
-        switch(this.orientation){
-            case NORTH: { return "0.png";}
-            case WEST: { return "6.png";}
-            case SOUTH: { return "4.png";}
-            case EAST: { return "2.png";}
-            case NORTHWEST: { return "7.png";}
-            case SOUTHEAST: { return "3.png";}
-            case SOUTHWEST: { return "5.png";}
-            case NORTHEAST: { return "1.png";}
-            default: { return "candy.png";}
+        switch (this.orientation) {
+            case NORTH -> {
+                return "0.png";
+            }
+            case WEST -> {
+                return "6.png";
+            }
+            case SOUTH -> {
+                return "4.png";
+            }
+            case EAST -> {
+                return "2.png";
+            }
+            case NORTHWEST -> {
+                return "7.png";
+            }
+            case SOUTHEAST -> {
+                return "3.png";
+            }
+            case SOUTHWEST -> {
+                return "5.png";
+            }
+            case NORTHEAST -> {
+                return "1.png";
+            }
+            default -> {
+                return "candy.png";
+            }
         }
     }
 
@@ -71,6 +95,7 @@ public class Animal implements IMapElement {
     }
 
     public Animal move(int direction){
+        this.age +=1;
         Vector2d newPosition = null;
         switch(direction) {
             case 0 -> {
@@ -101,7 +126,7 @@ public class Animal implements IMapElement {
             }
             case 7 -> {
                 orientation = orientation.previous();
-                orientation = orientation.previous();
+                newPosition = position.add(orientation.toUnitVector());
             }
             default -> {
             }
@@ -116,7 +141,7 @@ public class Animal implements IMapElement {
         else if(this.map.objectAt(newPosition) instanceof Grass){
             if (map instanceof GrassField && ((GrassField) map).isPlanted(newPosition)) {
                 ((GrassField) map).EatAndPlantNewGrass(newPosition);
-                this.raiseHP(1);
+                this.raiseHP(2);
                 Vector2d oldPosition = this.position;
                 this.position = newPosition;
                 positionChanged(oldPosition, newPosition);
@@ -124,7 +149,7 @@ public class Animal implements IMapElement {
         }
         else if(this.map.objectAt(newPosition) instanceof Animal){
             Animal that = (Animal) this.map.objectAt(newPosition);
-            map.multiplication(this, that);
+            multiplication(that);
             Vector2d oldPosition = this.position;
             this.position = newPosition;
             positionChanged(oldPosition, newPosition);
@@ -152,44 +177,65 @@ public class Animal implements IMapElement {
 
 
     public void setPosition(Vector2d newPosition){
-        this.position = newPosition;//zmienic pozycje na te
+        this.position = newPosition;
     }
 
 
-    public Animal multiplication(Animal animal1, Animal animal2){
-        if(animal1.HP>30 && animal2.HP>30) {
+    public void multiplication(Animal animal1){
+        if(animal1.HP>30 && this.HP>30) {
             Random generator = new Random();
             int l = generator.nextInt(2); //0 - lewa. 1-prawa
             double a1Weight = 0.25;
             double a2Weight = 0.75;
-            if(animal1.HP>=animal2.HP){
+            if(animal1.HP>=this.HP){
                 a1Weight = 0.75;
                 a2Weight = 0.25;
             }
 
             int a1Gens = (int)Math.round(a1Weight*animal1.animalGens.length);
-            int a2Gens = (int)Math.round(a2Weight*animal2.animalGens.length);
+            int a2Gens = (int)Math.round(a2Weight*this.animalGens.length);
             int n = a2Gens+a1Gens;
             int[] newGens = new int[n];
 
-            if(animal1.HP>=animal2.HP) {
+            if(animal1.HP>=this.HP) {
                 System.arraycopy(animal1.animalGens, 0, newGens, 0, a1Gens);
-                System.arraycopy(animal2.animalGens, a1Gens, newGens, a1Gens, a2Gens + 1);
+                int[]pom = reverse(this.animalGens);
+                System.arraycopy(pom, 0, newGens, a1Gens, a2Gens-1);
             }
-            else{
-                System.arraycopy(animal2.animalGens, 0, newGens, 0, a2Gens);
-                System.arraycopy(animal1.animalGens, a2Gens, newGens, a2Gens, a1Gens + 1);
+            else {
+                System.arraycopy(this.animalGens, 0, newGens, 0, a2Gens);
+                int[] pom = reverse(animal1.animalGens);
+                System.arraycopy(pom, 0, newGens, a2Gens, a1Gens - 1);
+            }
+            int x=this.genotypes.intGenerator(8);
+            for(int i =0; i<x; i++){
+                newGens[this.genotypes.intGenerator(n)] = this.genotypes.intGenerator(8);
             }
 
             int healthPoint = 50;
             animal1.loseHP(25);
-            animal2.loseHP(25);
+            this.loseHP(25); //zajmie miejsce rodzica w animals bo już jest taki klucz
             Animal baby = new Animal(this.map, animal1.position, healthPoint);
             baby.genotypes.genotypes = newGens;
-            return baby;
+
+            animal1.childeren +=1;
+            this.childeren +=1;
         }
-        return null;
+
+    }
+    public static int[] reverse(int[] data) {
+        for (int left = 0, right = data.length - 1; left < right; left++, right--) {
+            int temp = data[left];
+            data[left] = data[right];
+            data[right] = temp;
+        }
+        return data;
     }
 
+    public void death(){
+        if (this.HP == 0){
+            this.isAlive = false;
+        }
+    }
 }
 

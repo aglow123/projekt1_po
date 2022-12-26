@@ -8,13 +8,14 @@ class Animal
 
     genon o długości N
     
-    ilosc dzieci
+    ilosc dzieci (przy wywołaniu  multiplitacion zwiększa ilość dzieci)
     
-    wiek - ilosc dni
+    wiek - ilosc dni (przy wywołaniu move wzrasta ilość dni --> age) 
 
     isAlive ??
     
-    isHealthy - stała do robienia dzieciaka
+    isHealthy - stała do robienia dzieciaka (przy 
+    rozmnażaniu sprawdza czy HP jest wystarczające)
 
     funkcja move(gen) - jeden ruch(gen z genomu) na dzien
         pelna predestynacja - geny pokolei
@@ -110,15 +111,15 @@ do przemyslenia:
 
 Ania Ś:
 
-    animal - getElementName - zob. nazwy w resources
+    animal ok
     
-    grass
+    grass ok
     
-    movedirections
+    movedirections ok
     
-    optionparser
+    optionparser ok
     
-    mapdirection
+    mapdirection ok
 
 
 Ania G:
@@ -130,8 +131,7 @@ Ania G:
     grassfield -
         zalesione rowniki - ok
         toksyczne trupy - ??
-    
-    interfejsy
+
     
     mapboundary
     
