@@ -1,4 +1,4 @@
-package GrupaAA;
+package main.java.GrupaAA;
 
 public interface IPositionChangeObserver {
 

@@ -1,4 +1,4 @@
-package GrupaAA.gui;
+package main.java.GrupaAA.gui;
 
 import GrupaAA.IMapElement;
 import javafx.geometry.Pos;

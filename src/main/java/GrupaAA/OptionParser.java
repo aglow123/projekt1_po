@@ -1,4 +1,4 @@
-package GrupaAA;
+package main.java.GrupaAA;
 
 import java.util.Arrays;
 
@@ -8,17 +8,29 @@ public class OptionParser {
         MoveDirection[] moves = new MoveDirection[table.length];
         int j = 0;
         for (String el: table){
-            if (el.equals("f") || el.equals("forward")) {
+            if (el.equals("0")) {
                 moves[j] = MoveDirection.FORWARD;
                 j++;
-            } else if (el.equals("b") || el.equals("backward")) {
-                moves[j] = MoveDirection.BACKWARD;
+            } else if (el.equals("1")) {
+                moves[j] = MoveDirection.FORWARD_RIGHT;
                 j++;
-            } else if (el.equals("r") || el.equals("right")) {
+            } else if (el.equals("2")) {
                 moves[j] = MoveDirection.RIGHT;
                 j++;
-            } else if (el.equals("l") || el.equals("left")) {
+            } else if (el.equals("3")) {
+                moves[j] = MoveDirection.BACKWARD_RIGHT;
+                j++;
+            } else if (el.equals("4")) {
+                moves[j] = MoveDirection.BACKWARD;
+                j++;
+            } else if (el.equals("5")){
+                moves[j] = MoveDirection.BACKWARD_LEFT;
+                j++;
+            } else if (el.equals("6")){
                 moves[j] = MoveDirection.LEFT;
+                j++;
+            } else if (el.equals("7")){
+                moves[j] = MoveDirection.FORWARD_LEFT;
                 j++;
             } else {
                 throw new IllegalArgumentException(el + " is not legal move specification");

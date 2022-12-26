@@ -1,17 +1,9 @@
-package GrupaAA;
+package main.java.GrupaAA;
 
 public class HealthPoints {
-    public int HP;
+    public int points;
 
-    public HealthPoints(int HP){
-        this.HP = HP;
-    }
-
-    public int addHP(int HP){
-        return this.HP += HP;
-    }
-
-    public int removeHP(int HP){
-        return this.HP -= HP;
+    public HealthPoints(int points){
+        this.points = points;
     }
 }

@@ -1,4 +1,4 @@
-package GrupaAA;
+package main.java.GrupaAA;
 
 import java.util.ArrayList;
 import java.util.HashMap;

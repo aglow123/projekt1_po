@@ -1,12 +1,12 @@
-package GrupaAA;
+package main.java.GrupaAA;
 
 import java.util.ArrayList;
 
-public class Animal {
+public class Animal implements IMapElement {
     private static final Vector2d DEF_POSITION = new Vector2d(2,2);
     private MapDirection orientation;
     private Vector2d position;
-    protected HealthPoints HP = new HealthPoints(10);
+    protected HealthPoints HP;
     private IWorldMap map;
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
@@ -18,6 +18,7 @@ public class Animal {
         this.orientation = MapDirection.NORTH;
         this.position = initialPosition;
         this.map = map;
+        this.HP = new HealthPoints(100);
         map.place(this);
     }
 
@@ -27,12 +28,30 @@ public class Animal {
             case EAST -> ">";
             case SOUTH -> "v";
             case WEST -> "<";
+            case NORTHWEST -> "NW";
+            case NORTHEAST -> "NE";
+            case SOUTHWEST -> "SW";
+            case SOUTHEAST -> "SE";
             default -> this.toString();
         };
     }
     public MapDirection getOrientation(){return this.orientation;}
 
     public Vector2d getPosition(){return this.position;}
+    @Override
+    public String getElementName() {
+        switch(this.orientation){
+            case NORTH: { return "0.png";}
+            case WEST: { return "6.png";}
+            case SOUTH: { return "4.png";}
+            case EAST: { return "2.png";}
+            case NORTHWEST: { return "7.png";}
+            case SOUTHEAST: { return "3.png";}
+            case SOUTHWEST: { return "5.png";}
+            case NORTHEAST: { return "1.png";}
+            default: { return "candy.png";}
+        }
+    }
 
     public boolean isAt(Vector2d position){
         return this.position.equals(position);
@@ -48,7 +67,64 @@ public class Animal {
     }
 
     public Animal move(MoveDirection direction){
-        //sporo do przekopiowania z wczeniejszej wersji, w grass field obsluguje granice mapy
+        Vector2d newPosition = null;
+        switch(direction) {
+            case FORWARD -> {
+                newPosition = position.add(orientation.toUnitVector());
+            }
+            case FORWARD_RIGHT -> {
+                orientation = orientation.next();
+                newPosition = position.add(orientation.toUnitVector());
+            }
+            case RIGHT -> {
+                orientation = (orientation.next()).next();
+                newPosition = position.add(orientation.toUnitVector());
+            }
+            case BACKWARD_RIGHT -> {
+                orientation = ((orientation.next()).next()).next();
+                newPosition = position.subtract(orientation.toUnitVector());
+            }
+            case BACKWARD -> {
+                newPosition = position.subtract(orientation.toUnitVector());
+            }
+            case BACKWARD_LEFT -> {
+                orientation = ((orientation.previous()).previous()).previous();
+                newPosition = position.add(orientation.toUnitVector());
+            }
+            case LEFT -> {
+                orientation = (orientation.previous()).previous();
+                newPosition = position.add(orientation.toUnitVector());
+            }
+            case FORWARD_LEFT -> {
+                orientation = orientation.previous();
+                orientation = orientation.previous();
+            }
+            default -> {
+            }
+        }
+
+        if(!this.map.isOccupied(newPosition)) {
+            Vector2d oldPosition = this.position;
+            this.position = newPosition;
+            positionChanged(oldPosition, newPosition);
+
+        }
+        else if(this.map.objectAt(newPosition) instanceof Grass){
+            if (map instanceof GrassField && ((GrassField) map).isPlanted(newPosition)) {
+                ((GrassField) map).EatAndPlantNewGrass(newPosition);
+                this.raiseHP(1);
+                Vector2d oldPosition = this.position;
+                this.position = newPosition;
+                positionChanged(oldPosition, newPosition);
+            }
+        }
+        else if(this.map.objectAt(newPosition) instanceof Animal){
+            Animal that = (Animal) this.map.objectAt(newPosition);
+            map.multiplication(this, that);
+            Vector2d oldPosition = this.position;
+            this.position = newPosition;
+            positionChanged(oldPosition, newPosition);
+        }
         return this;
     }
     void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
@@ -57,14 +133,22 @@ public class Animal {
         }
     }
     public void turnAround(){
-        //obrocic orientacje zwiarzaka o 180 stopni
+        for(int i =0; i<4; i++){
+            orientation = orientation.next();
+        }
     }
 
-    public void loseHP(){
-        //pomniejszyc wartosc HP o ustalona wartosc (taka sama jak w przypadku rozmnazania)
+    public HealthPoints raiseHP(int points){
+        this.HP.points += points;
+        return this.HP;
     }
+
+    public int loseHP(int points){
+        return this.HP.points -= points;
+    }
+
 
     public void setPosition(Vector2d newPosition){
-        //zmienic pozycje na te
+        this.position = newPosition;//zmienic pozycje na te
     }
 }

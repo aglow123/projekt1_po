@@ -1,4 +1,4 @@
-package GrupaAA;
+package main.java.GrupaAA;
 
 public class Grass implements IMapElement{
     Vector2d position;
