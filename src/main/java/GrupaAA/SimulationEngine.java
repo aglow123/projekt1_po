@@ -13,7 +13,7 @@ public class SimulationEngine implements IEngine, Runnable{
         this.map = map;
         this.positions = positions;
         for (Vector2d position: positions) {
-            new Animal(map, position, newHP);
+            new Animal(map, position);
         }
     }
 
@@ -22,7 +22,7 @@ public class SimulationEngine implements IEngine, Runnable{
         this.map = map;
         this.positions = positions;
         for (Vector2d position: positions) {
-            new Animal(map, position, newHP);
+            new Animal(map, position);
         }
     }
 

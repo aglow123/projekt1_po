@@ -4,9 +4,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Animal implements IMapElement {
+
+    //parametry
+    int HP ;
+    int plantEnergy;
+    int birthCost;
+    int minHP;
+    int maxMutations;
+
+
     private static final Vector2d DEF_POSITION = new Vector2d(2,2);
     private static final int initHP = 100;
-    int HP ;
     public Genotypes genotypes = new Genotypes();
     public int[] animalGens;
     private MapDirection orientation;
@@ -18,14 +26,13 @@ public class Animal implements IMapElement {
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(IWorldMap map){
-        this(map, DEF_POSITION, initHP);
+        this(map, DEF_POSITION);
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition, int HP){
+    public Animal(IWorldMap map, Vector2d initialPosition){
         this.orientation = MapDirection.NORTH;
         this.position = initialPosition;
         this.map = map;
-        this.HP = HP;
         this.animalGens = genotypes.genotypes;
         this.age = 0;
         this.childeren = 0;
@@ -141,7 +148,7 @@ public class Animal implements IMapElement {
         else if(this.map.objectAt(newPosition) instanceof Grass){
             if (map instanceof GrassField && ((GrassField) map).isPlanted(newPosition)) {
                 ((GrassField) map).EatAndPlantNewGrass(newPosition);
-                this.raiseHP(2);
+                this.raiseHP(plantEnergy);
                 Vector2d oldPosition = this.position;
                 this.position = newPosition;
                 positionChanged(oldPosition, newPosition);
@@ -182,7 +189,7 @@ public class Animal implements IMapElement {
 
 
     public void multiplication(Animal animal1){
-        if(animal1.HP>30 && this.HP>30) {
+        if(animal1.HP>minHP && this.HP>minHP) {
             Random generator = new Random();
             int l = generator.nextInt(2); //0 - lewa. 1-prawa
             double a1Weight = 0.25;
@@ -207,17 +214,17 @@ public class Animal implements IMapElement {
                 int[] pom = reverse(animal1.animalGens);
                 System.arraycopy(pom, 0, newGens, a2Gens, a1Gens - 1);
             }
-            int x=this.genotypes.intGenerator(8);
+            int x=this.genotypes.intGenerator(maxMutations);
             for(int i =0; i<x; i++){
                 newGens[this.genotypes.intGenerator(n)] = this.genotypes.intGenerator(8);
             }
 
-            int healthPoint = 50;
-            animal1.loseHP(25);
-            this.loseHP(25); //zajmie miejsce rodzica w animals bo już jest taki klucz
-            Animal baby = new Animal(this.map, animal1.position, healthPoint);
+            int healthPoint = birthCost*2;
+            animal1.loseHP(birthCost);
+            this.loseHP(birthCost); //zajmie miejsce rodzica w animals bo już jest taki klucz
+            Animal baby = new Animal(this.map, animal1.position);
             baby.genotypes.genotypes = newGens;
-
+            baby.HP = healthPoint;
             animal1.childeren +=1;
             this.childeren +=1;
         }

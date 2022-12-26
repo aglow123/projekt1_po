@@ -111,7 +111,7 @@ do przemyslenia:
 
 Ania Ś:
 
-    animal ok
+    animal - dodać warianty
     
     grass ok
     
@@ -121,6 +121,9 @@ Ania Ś:
     
     mapdirection ok
 
+    simulationengine
+    
+    simulationenginegui
 
 Ania G:
     
@@ -136,10 +139,6 @@ Ania G:
     mapboundary
     
     mapvisualizer
-    
-    simulationengine
-    
-    simulationenginegui
     
     app
     

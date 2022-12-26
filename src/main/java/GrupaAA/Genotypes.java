@@ -4,7 +4,8 @@ import java.util.Random;
 
 public class Genotypes {
 
-    int n = intGenerator(15);
+    int maxGenLength;
+    int n = intGenerator(maxGenLength);
     public int[] genotypes;
 
     public Genotypes(){
