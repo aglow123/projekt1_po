@@ -1,24 +1,29 @@
 package main.java.GrupaAA;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Animal implements IMapElement {
     private static final Vector2d DEF_POSITION = new Vector2d(2,2);
+    private static final int initHP = 100;
+    int HP ;
+    public Genotypes genotypes = new Genotypes();
+    public int[] animalGens;
     private MapDirection orientation;
     private Vector2d position;
-    protected HealthPoints HP;
     private IWorldMap map;
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(IWorldMap map){
-        this(map, DEF_POSITION);
+        this(map, DEF_POSITION, initHP);
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition){
+    public Animal(IWorldMap map, Vector2d initialPosition, int HP){
         this.orientation = MapDirection.NORTH;
         this.position = initialPosition;
         this.map = map;
-        this.HP = new HealthPoints(100);
+        this.HP = HP;
+        this.animalGens = genotypes.genotypes;
         map.place(this);
     }
 
@@ -57,7 +62,6 @@ public class Animal implements IMapElement {
         return this.position.equals(position);
     }
 
-    //powrzucalam funckje ktore mi beda potrzebne do mapy, jakby cos bylo nie zrozumiale - pytaj
     void addObserver(IPositionChangeObserver observer) {
         observers.add(observer);
     }
@@ -66,36 +70,36 @@ public class Animal implements IMapElement {
         observers.remove(observer);
     }
 
-    public Animal move(MoveDirection direction){
+    public Animal move(int direction){
         Vector2d newPosition = null;
         switch(direction) {
-            case FORWARD -> {
+            case 0 -> {
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case FORWARD_RIGHT -> {
+            case 1 -> {
                 orientation = orientation.next();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case RIGHT -> {
+            case 2 -> {
                 orientation = (orientation.next()).next();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case BACKWARD_RIGHT -> {
+            case 3 -> {
                 orientation = ((orientation.next()).next()).next();
                 newPosition = position.subtract(orientation.toUnitVector());
             }
-            case BACKWARD -> {
+            case 4 -> {
                 newPosition = position.subtract(orientation.toUnitVector());
             }
-            case BACKWARD_LEFT -> {
+            case 5 -> {
                 orientation = ((orientation.previous()).previous()).previous();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case LEFT -> {
+            case 6 -> {
                 orientation = (orientation.previous()).previous();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case FORWARD_LEFT -> {
+            case 7 -> {
                 orientation = orientation.previous();
                 orientation = orientation.previous();
             }
@@ -138,17 +142,54 @@ public class Animal implements IMapElement {
         }
     }
 
-    public HealthPoints raiseHP(int points){
-        this.HP.points += points;
-        return this.HP;
+    public void raiseHP(int points){
+        this.HP += points;
     }
 
-    public int loseHP(int points){
-        return this.HP.points -= points;
+    public void loseHP(int points){
+        this.HP -= points;
     }
 
 
     public void setPosition(Vector2d newPosition){
         this.position = newPosition;//zmienic pozycje na te
     }
+
+
+    public Animal multiplication(Animal animal1, Animal animal2){
+        if(animal1.HP>30 && animal2.HP>30) {
+            Random generator = new Random();
+            int l = generator.nextInt(2); //0 - lewa. 1-prawa
+            double a1Weight = 0.25;
+            double a2Weight = 0.75;
+            if(animal1.HP>=animal2.HP){
+                a1Weight = 0.75;
+                a2Weight = 0.25;
+            }
+
+            int a1Gens = (int)Math.round(a1Weight*animal1.animalGens.length);
+            int a2Gens = (int)Math.round(a2Weight*animal2.animalGens.length);
+            int n = a2Gens+a1Gens;
+            int[] newGens = new int[n];
+
+            if(animal1.HP>=animal2.HP) {
+                System.arraycopy(animal1.animalGens, 0, newGens, 0, a1Gens);
+                System.arraycopy(animal2.animalGens, a1Gens, newGens, a1Gens, a2Gens + 1);
+            }
+            else{
+                System.arraycopy(animal2.animalGens, 0, newGens, 0, a2Gens);
+                System.arraycopy(animal1.animalGens, a2Gens, newGens, a2Gens, a1Gens + 1);
+            }
+
+            int healthPoint = 50;
+            animal1.loseHP(25);
+            animal2.loseHP(25);
+            Animal baby = new Animal(this.map, animal1.position, healthPoint);
+            baby.genotypes.genotypes = newGens;
+            return baby;
+        }
+        return null;
+    }
+
 }
+
