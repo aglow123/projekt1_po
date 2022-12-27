@@ -5,17 +5,17 @@ import java.util.Random;
 public class Genotypes {
 
     int maxGenLength;
-    int n = intGenerator(maxGenLength);
+    int genotypesLength = intGenerator(maxGenLength);
     public int[] genotypes;
 
     public Genotypes(){
 
-        this.genotypes = new int[n];
+        this.genotypes = new int[genotypesLength];
         genGenerator();
     }
-    public int intGenerator(int max){
+    public static int intGenerator(int max){
         Random generator = new Random();
-        return generator.nextInt(max);
+        return generator.nextInt(max) + 1;
     }
     public void genGenerator(){
         for(int i = 0; i< genotypes.length; i++){

@@ -11,6 +11,7 @@ public class Animal implements IMapElement {
     int birthCost;
     int minHP;
     int maxMutations;
+    String whichMutation;
 
 
     private static final Vector2d DEF_POSITION = new Vector2d(2,2);
@@ -156,7 +157,7 @@ public class Animal implements IMapElement {
         }
         else if(this.map.objectAt(newPosition) instanceof Animal){
             Animal that = (Animal) this.map.objectAt(newPosition);
-            multiplication(that);
+            multiplication(that, whichMutation);
             Vector2d oldPosition = this.position;
             this.position = newPosition;
             positionChanged(oldPosition, newPosition);
@@ -188,10 +189,9 @@ public class Animal implements IMapElement {
     }
 
 
-    public void multiplication(Animal animal1){
+    public void multiplication(Animal animal1, String whichMutation){
         if(animal1.HP>minHP && this.HP>minHP) {
-            Random generator = new Random();
-            int setSide = generator.nextInt(2); //0-lewa, 1-prawa
+            int setSide = Genotypes.intGenerator(2); //0-lewa, 1-prawa
             double a1Weight = 0.25;
             double a2Weight = 0.75;
             if(animal1.HP>=this.HP){
@@ -211,12 +211,6 @@ public class Animal implements IMapElement {
                 setChildrenGens(this, animal1, babyGens, thisGensLength, a1GensLength, setSide);
             }
 
-            //mutacja genów
-            int x=this.genotypes.intGenerator(maxMutations);
-            for(int i =0; i<x; i++){
-                babyGens[this.genotypes.intGenerator(babyGensLength)] = this.genotypes.intGenerator(8);
-            }
-
             int healthPoint = birthCost*2;
             animal1.loseHP(birthCost);
             this.loseHP(birthCost); //zajmie miejsce rodzica w animals bo już jest taki klucz
@@ -225,6 +219,8 @@ public class Animal implements IMapElement {
             baby.HP = healthPoint;
             animal1.childeren +=1;
             this.childeren +=1;
+
+            Variants.mutation(baby, whichMutation);
         }
 
     }
