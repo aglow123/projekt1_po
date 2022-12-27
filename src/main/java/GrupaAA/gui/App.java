@@ -38,7 +38,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
                 return;
             String[] newMoves = userInput.getText().split(" ");
             MoveDirection[] newDirection = OptionParser.parse(newMoves);
-            engine.setDirections(newDirection);
+//            engine.setDirections(newDirection);
             new Thread(engine).start();
         });
 

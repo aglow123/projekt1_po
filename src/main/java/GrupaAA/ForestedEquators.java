@@ -26,7 +26,7 @@ public class ForestedEquators extends GrassField{
                 x = rand.nextInt(this.upperRightEquator.x);
                 y = rand.nextInt(widthOfEquator);
                 newPosition = new Vector2d(x, y + this.lowerLeftEquator.y);
-                if (!isOccupied(newPosition)){
+                if (!isPlanted(newPosition)){
                     break;
                 }
             }
@@ -37,7 +37,7 @@ public class ForestedEquators extends GrassField{
                 y = rand.nextInt(this.upperRight.y);
                 if(y<this.lowerLeftEquator.y || y>this.upperRightEquator.y){
                     newPosition = new Vector2d(x, y);
-                    if (!isOccupied(newPosition)){
+                    if (!isPlanted(newPosition)){
                         break;
                     }
                 }

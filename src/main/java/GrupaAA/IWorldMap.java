@@ -8,35 +8,31 @@ package GrupaAA;
  *
  */
 public interface IWorldMap {
-//    /**
-//     * Indicate if any object can move to the given position.
-//     * Change position to correct position if needed.
-//     *
-//     * @param position
-//     *            The position checked for the movement possibility.
-//     * @return Position the object can move to.
-//     */
-//    Vector2d canMoveTo(Vector2d position);
-
     /**
-     * Place a animal on the map.
+     * Places an animal on the map, add observer and update mapBoundary.
      *
      * @param animal
      *            The animal to place on the map.
-     * True if the animal was placed. The animal cannot be placed if the map is already occupied.
      */
     void place(Animal animal);
 
     /**
-     * Return true if given position on the map is occupied. Should not be
-     * confused with canMove since there might be empty positions where the animal
-     * cannot move.
+     * Return true if given position on the map is occupied.
      *
      * @param position
      *            Position to check.
      * @return True if the position is occupied.
      */
     boolean isOccupied(Vector2d position);
+
+    /**
+     * Return true if given position on the map is planted.
+     *
+     * @param position
+     *            Position to check.
+     * @return True if object at given position is instance of Grass.
+     */
+    boolean isPlanted(Vector2d position);
 
     /**
      * Return an object at a given position.
@@ -46,4 +42,10 @@ public interface IWorldMap {
      * @return Object or null if the position is not occupied.
      */
     Object objectAt(Vector2d position);
+
+    /**
+     * Remove dead animals from the map.
+     */
+    void cleanDeadAnimal();
+
 }

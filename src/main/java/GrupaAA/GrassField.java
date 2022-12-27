@@ -6,21 +6,26 @@ import java.util.Map;
 import java.util.Random;
 
 public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
+    //parametry
+    int typeOfBounds;
+    int numberOfGrass;
+    int height;
+    int width;
+
+
     Vector2d lowerLeft, upperRight;
     Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
-    int numberOfGrass;
     Map<Vector2d, Grass> grasses = new HashMap<>();
     MapBoundary mapBoundary;
-    int typeOfBounds;
 
-    public GrassField(int numberOfGrass){
-        this(new MapBoundary(), 1, numberOfGrass, 100, 100);
+
+    public GrassField(){
+        this(new MapBoundary(),1,10,100,100);
     }
 
     public GrassField(MapBoundary mapBoundary, int typeOfBounds, int numberOfGrass, int height, int width){
         this.mapBoundary = mapBoundary;
         this.typeOfBounds = typeOfBounds;   //1 stands for 'globe', 2 stands for 'hell portal'
-        this.numberOfGrass = numberOfGrass;
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width, height);
         for(int i=0; i<numberOfGrass; i++){
@@ -29,33 +34,14 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     }
     abstract public void PlantGrass();
 
-    public void EatAndPlantNewGrass(Vector2d position){
-        PlantGrass();
+    public void EatGrass(Vector2d position){
         this.grasses.remove(position);
         mapBoundary.remove(position);
     }
 
-//    @Override
-//    public Vector2d canMoveTo(Vector2d position) {
-//        if(!position.follows(this.lowerLeft) || !position.precedes(this.upperRight)){
-//            if(this.typeOfBounds == 1){
-//                if(position.x < this.lowerLeft.x || position.x > this.upperRight.x){
-//                    position.x = (position.x)%this.upperRight.x;
-//                }
-//                if(position.y < this.lowerLeft.y){
-//                    position.y = position.y + 1;
-//                }
-//                else if(position.y > this.upperRight.y){
-//                    position.y = position.y - 1;
-//                }
-//            }
-//            else if(typeOfBounds == 2){
-//                Random rand = new Random();
-//                position = new Vector2d(rand.nextInt(this.upperRight.x), rand.nextInt(this.upperRight.y));
-//            }
-//        }
-//        return position;
-//    }
+    public boolean IsFull(){
+        return grasses.size() == upperRight.x * upperRight.y;
+    }
 
     @Override
     public void place(Animal animal) throws IllegalArgumentException{
@@ -83,11 +69,9 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
         return animals.containsKey(position);
     }
 
-    public boolean isPlanted(Vector2d position){
-        return grasses.containsKey(position);
-    }
-
     @Override
+    public boolean isPlanted(Vector2d position){return grasses.containsKey(position);}
+
     public String toString() {
         Vector2d[] borders = setBorders();
         return new MapVisualizer(this).draw(borders[0], borders[1]);
@@ -97,6 +81,7 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
         return new Vector2d[]{mapBoundary.lowerLeft(), mapBoundary.upperRight()};
     }
 
+    @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
         ArrayList<Animal> animalList = animals.get(oldPosition);
         for(Animal animal: animalList){
@@ -113,5 +98,18 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
 
     public Map<Vector2d, ArrayList<Animal>> animals(){
         return animals;
+    }
+
+    @Override
+    public void cleanDeadAnimal(){
+        for(ArrayList<Animal> animalList: animals.values()){
+            for(Animal animal : animalList){
+                if(animal.HP <= 0){
+                    animalList.remove(animal);
+                    mapBoundary.remove(animal.getPosition());
+                    animal.removeObserver(this);
+                }
+            }
+        }
     }
 }

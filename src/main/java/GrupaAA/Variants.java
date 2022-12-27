@@ -22,4 +22,14 @@ public class Variants {
             }
         }
     }
+
+    public static int animalBehavior(String whichBehaviour, int nextMove) {
+        if (whichBehaviour.equals("Random")) {
+            int random = Genotypes.intGenerator(10);
+            if (random <= 2) {
+                nextMove = Genotypes.intGenerator(Genotypes.maxGenLength);
+            }
+        }
+        return nextMove;
+    }
 }

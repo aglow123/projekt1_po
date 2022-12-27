@@ -4,13 +4,11 @@ import java.util.Random;
 
 public class Genotypes {
 
-    int maxGenLength;
-    int genotypesLength = intGenerator(maxGenLength);
+    static int maxGenLength;
     public int[] genotypes;
 
     public Genotypes(){
-
-        this.genotypes = new int[genotypesLength];
+        this.genotypes = new int[maxGenLength];
         genGenerator();
     }
     public static int intGenerator(int max){

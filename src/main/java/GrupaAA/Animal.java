@@ -7,7 +7,7 @@ public class Animal implements IMapElement {
 
     //parametry
     int HP ;
-    int plantEnergy;
+//    int plantEnergy;
     int birthCost;
     int minHP;
     int maxMutations;
@@ -21,9 +21,8 @@ public class Animal implements IMapElement {
     private MapDirection orientation;
     private Vector2d position;
     private GrassField map;
-    private int age;
-    boolean isAlive;
-    private int children;
+    int age;
+    int children;
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(GrassField map){
@@ -32,13 +31,11 @@ public class Animal implements IMapElement {
 
     public Animal(GrassField map, Vector2d initialPosition){
         this.orientation = MapDirection.NORTH;
-//        this.position = initialPosition;
         this.canMoveTo(initialPosition);
         this.map = map;
         this.animalGens = genotypes.genotypes;
         this.age = 0;
         this.children = 0;
-        this.isAlive = true;
         map.place(this);
     }
 
@@ -52,7 +49,7 @@ public class Animal implements IMapElement {
             case NORTHEAST -> "NE";
             case SOUTHWEST -> "SW";
             case SOUTHEAST -> "SE";
-            default -> this.toString();
+//            default -> this.toString();
         };
     }
     public MapDirection getOrientation(){return this.orientation;}
@@ -103,13 +100,11 @@ public class Animal implements IMapElement {
         observers.remove(observer);
     }
 
-    public Animal move(int direction){
+    public void move(int direction){
         this.age +=1;
         Vector2d newPosition = null;
         switch(direction) {
-            case 0 -> {
-                newPosition = position.add(orientation.toUnitVector());
-            }
+            case 0 -> newPosition = position.add(orientation.toUnitVector());
             case 1 -> {
                 orientation = orientation.next();
                 newPosition = position.add(orientation.toUnitVector());
@@ -122,9 +117,7 @@ public class Animal implements IMapElement {
                 orientation = ((orientation.next()).next()).next();
                 newPosition = position.subtract(orientation.toUnitVector());
             }
-            case 4 -> {
-                newPosition = position.subtract(orientation.toUnitVector());
-            }
+            case 4 -> newPosition = position.subtract(orientation.toUnitVector());
             case 5 -> {
                 orientation = ((orientation.previous()).previous()).previous();
                 newPosition = position.add(orientation.toUnitVector());
@@ -141,21 +134,17 @@ public class Animal implements IMapElement {
             }
         }
 
-//        if(!this.map.isOccupied(newPosition)) {
-//            Vector2d oldPosition = this.position;
-//            this.position = newPosition;
-//            positionChanged(oldPosition, newPosition);
-//        }
         this.canMoveTo(newPosition);
 
+        //zroibone w simulationengine, mozesz obczaic i pozmieniac tutaj, chyba nie trzeba bedzie sprawdzac zajetosci tylko poprzesuwać i siema
         if(this.map.objectAt(newPosition) instanceof Grass){    //najpierw walka - FAQ w instrukcji
-            if (map.isPlanted(newPosition)) {
-                map.EatAndPlantNewGrass(newPosition);
-                this.raiseHP(plantEnergy);
+//            if (map.isPlanted(newPosition)) {
+//                map.EatGrass(newPosition);
+//                this.raiseHP(plantEnergy);
                 Vector2d oldPosition = this.position;
                 this.position = newPosition;
                 positionChanged(oldPosition, newPosition);
-            }
+//            }
         }
         else if(this.map.objectAt(newPosition) instanceof Animal){  //najpierw walka - FAQ w instrukcji
             Animal that = (Animal) this.map.objectAt(newPosition);
@@ -164,7 +153,6 @@ public class Animal implements IMapElement {
             this.position = newPosition;
             positionChanged(oldPosition, newPosition);
         }
-        return this;
     }
 
     void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
@@ -184,12 +172,15 @@ public class Animal implements IMapElement {
             if(this.map.typeOfBounds == 1){
                 if(position.x < this.map.lowerLeft.x || position.x > this.map.upperRight.x){
                     position.x = (position.x)%this.map.upperRight.x;
+                    this.turnAround();
                 }
                 if(position.y < this.map.lowerLeft.y){
                     position.y = position.y + 1;
+                    this.turnAround();
                 }
                 else if(position.y > this.map.upperRight.y){
                     position.y = position.y - 1;
+                    this.turnAround();
                 }
             }
             else if(this.map.typeOfBounds == 2){
@@ -268,12 +259,6 @@ public class Animal implements IMapElement {
             data[right] = temp;
         }
         return data;
-    }
-
-    public void death(){
-        if (this.HP == 0){
-            this.isAlive = false;
-        }
     }
 }
 
