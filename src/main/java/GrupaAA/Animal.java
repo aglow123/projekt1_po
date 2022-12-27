@@ -191,7 +191,7 @@ public class Animal implements IMapElement {
     public void multiplication(Animal animal1){
         if(animal1.HP>minHP && this.HP>minHP) {
             Random generator = new Random();
-            int l = generator.nextInt(2); //0 - lewa. 1-prawa
+            int setSide = generator.nextInt(2); //0-lewa, 1-prawa
             double a1Weight = 0.25;
             double a2Weight = 0.75;
             if(animal1.HP>=this.HP){
@@ -199,36 +199,45 @@ public class Animal implements IMapElement {
                 a2Weight = 0.25;
             }
 
-            int a1Gens = (int)Math.round(a1Weight*animal1.animalGens.length);
-            int a2Gens = (int)Math.round(a2Weight*this.animalGens.length);
-            int n = a2Gens+a1Gens;
-            int[] newGens = new int[n];
+            int a1GensLength = (int)Math.round(a1Weight*animal1.animalGens.length);
+            int thisGensLength = (int)Math.round(a2Weight*this.animalGens.length);
+            int babyGensLength = thisGensLength+a1GensLength;
+            int[] babyGens = new int[babyGensLength];
 
             if(animal1.HP>=this.HP) {
-                System.arraycopy(animal1.animalGens, 0, newGens, 0, a1Gens);
-                int[]pom = reverse(this.animalGens);
-                System.arraycopy(pom, 0, newGens, a1Gens, a2Gens-1);
+                setChildrenGens(animal1, this, babyGens, a1GensLength, thisGensLength, setSide);
             }
             else {
-                System.arraycopy(this.animalGens, 0, newGens, 0, a2Gens);
-                int[] pom = reverse(animal1.animalGens);
-                System.arraycopy(pom, 0, newGens, a2Gens, a1Gens - 1);
+                setChildrenGens(this, animal1, babyGens, thisGensLength, a1GensLength, setSide);
             }
+
+            //mutacja genów
             int x=this.genotypes.intGenerator(maxMutations);
             for(int i =0; i<x; i++){
-                newGens[this.genotypes.intGenerator(n)] = this.genotypes.intGenerator(8);
+                babyGens[this.genotypes.intGenerator(babyGensLength)] = this.genotypes.intGenerator(8);
             }
 
             int healthPoint = birthCost*2;
             animal1.loseHP(birthCost);
             this.loseHP(birthCost); //zajmie miejsce rodzica w animals bo już jest taki klucz
             Animal baby = new Animal(this.map, animal1.position);
-            baby.genotypes.genotypes = newGens;
+            baby.animalGens = babyGens;
             baby.HP = healthPoint;
             animal1.childeren +=1;
             this.childeren +=1;
         }
 
+    }
+    public void setChildrenGens(Animal parent1, Animal parent2, int[] childrenGens, int length1, int length2, int random){
+        int[] temp;
+        if(random==0){
+            temp = reverse(parent2.animalGens);
+        }
+        else{
+            temp = reverse(parent1.animalGens);
+        }
+        System.arraycopy(parent1.animalGens, 0, childrenGens, 0, length1);
+        System.arraycopy(temp, 0, childrenGens, length1, length2);
     }
     public static int[] reverse(int[] data) {
         for (int left = 0, right = data.length - 1; left < right; left++, right--) {
