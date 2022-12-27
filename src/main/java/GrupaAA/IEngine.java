@@ -1,4 +1,4 @@
-package main.java.GrupaAA;
+package GrupaAA;
 
 /**
  * The interface responsible for managing the moves of the animals.

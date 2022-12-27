@@ -1,4 +1,4 @@
-package main.java.GrupaAA.gui;
+package GrupaAA.gui;
 
 import GrupaAA.*;
 import javafx.geometry.HPos;

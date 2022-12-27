@@ -1,4 +1,4 @@
-package main.java.GrupaAA;
+package GrupaAA;
 
 import java.util.Objects;
 

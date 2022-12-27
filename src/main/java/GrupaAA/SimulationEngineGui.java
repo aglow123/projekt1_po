@@ -1,4 +1,4 @@
-package main.java.GrupaAA;
+package GrupaAA;
 
 import javafx.application.Platform;
 

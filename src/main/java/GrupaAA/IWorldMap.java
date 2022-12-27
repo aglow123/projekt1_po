@@ -1,4 +1,4 @@
-package main.java.GrupaAA;
+package GrupaAA;
 
 /**
  * The interface responsible for interacting with the map of the world.

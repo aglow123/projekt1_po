@@ -1,4 +1,4 @@
-package main.java.GrupaAA;
+package GrupaAA;
 
 /**
  * The map visualizer converts the {@link IWorldMap} map into a string
