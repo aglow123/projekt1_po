@@ -20,23 +20,24 @@ public class Animal implements IMapElement {
     public int[] animalGens;
     private MapDirection orientation;
     private Vector2d position;
-    private IWorldMap map;
+    private GrassField map;
     private int age;
     boolean isAlive;
-    private int childeren;
+    private int children;
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
-    public Animal(IWorldMap map){
+    public Animal(GrassField map){
         this(map, DEF_POSITION);
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition){
+    public Animal(GrassField map, Vector2d initialPosition){
         this.orientation = MapDirection.NORTH;
-        this.position = initialPosition;
+//        this.position = initialPosition;
+        this.canMoveTo(initialPosition);
         this.map = map;
         this.animalGens = genotypes.genotypes;
         this.age = 0;
-        this.childeren = 0;
+        this.children = 0;
         this.isAlive = true;
         map.place(this);
     }
@@ -140,22 +141,23 @@ public class Animal implements IMapElement {
             }
         }
 
-        if(!this.map.isOccupied(newPosition)) {
-            Vector2d oldPosition = this.position;
-            this.position = newPosition;
-            positionChanged(oldPosition, newPosition);
+//        if(!this.map.isOccupied(newPosition)) {
+//            Vector2d oldPosition = this.position;
+//            this.position = newPosition;
+//            positionChanged(oldPosition, newPosition);
+//        }
+        this.canMoveTo(newPosition);
 
-        }
-        else if(this.map.objectAt(newPosition) instanceof Grass){
-            if (map instanceof GrassField && ((GrassField) map).isPlanted(newPosition)) {
-                ((GrassField) map).EatAndPlantNewGrass(newPosition);
+        if(this.map.objectAt(newPosition) instanceof Grass){    //najpierw walka - FAQ w instrukcji
+            if (map.isPlanted(newPosition)) {
+                map.EatAndPlantNewGrass(newPosition);
                 this.raiseHP(plantEnergy);
                 Vector2d oldPosition = this.position;
                 this.position = newPosition;
                 positionChanged(oldPosition, newPosition);
             }
         }
-        else if(this.map.objectAt(newPosition) instanceof Animal){
+        else if(this.map.objectAt(newPosition) instanceof Animal){  //najpierw walka - FAQ w instrukcji
             Animal that = (Animal) this.map.objectAt(newPosition);
             multiplication(that, whichMutation);
             Vector2d oldPosition = this.position;
@@ -164,15 +166,39 @@ public class Animal implements IMapElement {
         }
         return this;
     }
+
     void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
         for (IPositionChangeObserver observer: observers) {
             observer.positionChanged(oldPosition, newPosition);
         }
     }
+
     public void turnAround(){
         for(int i =0; i<4; i++){
             orientation = orientation.next();
         }
+    }
+
+    public void canMoveTo(Vector2d position){
+        if(!position.follows(this.map.lowerLeft) || !position.precedes(this.map.upperRight)){
+            if(this.map.typeOfBounds == 1){
+                if(position.x < this.map.lowerLeft.x || position.x > this.map.upperRight.x){
+                    position.x = (position.x)%this.map.upperRight.x;
+                }
+                if(position.y < this.map.lowerLeft.y){
+                    position.y = position.y + 1;
+                }
+                else if(position.y > this.map.upperRight.y){
+                    position.y = position.y - 1;
+                }
+            }
+            else if(this.map.typeOfBounds == 2){
+                Random rand = new Random();
+                this.loseHP(birthCost);
+                position = new Vector2d(rand.nextInt(this.map.upperRight.x), rand.nextInt(this.map.upperRight.y));
+            }
+        }
+        this.position = position;
     }
 
     public void raiseHP(int points){
@@ -217,8 +243,8 @@ public class Animal implements IMapElement {
             Animal baby = new Animal(this.map, animal1.position);
             baby.animalGens = babyGens;
             baby.HP = healthPoint;
-            animal1.childeren +=1;
-            this.childeren +=1;
+            animal1.children +=1;
+            this.children +=1;
 
             Variants.mutation(baby, whichMutation);
         }

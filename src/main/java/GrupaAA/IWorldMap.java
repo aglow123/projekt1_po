@@ -8,24 +8,24 @@ package GrupaAA;
  *
  */
 public interface IWorldMap {
-    /**
-     * Indicate if any object can move to the given position.
-     * Change position to correct position if needed.
-     *
-     * @param position
-     *            The position checked for the movement possibility.
-     * @return Position the object can move to.
-     */
-    Vector2d canMoveTo(Vector2d position);
+//    /**
+//     * Indicate if any object can move to the given position.
+//     * Change position to correct position if needed.
+//     *
+//     * @param position
+//     *            The position checked for the movement possibility.
+//     * @return Position the object can move to.
+//     */
+//    Vector2d canMoveTo(Vector2d position);
 
     /**
      * Place a animal on the map.
      *
      * @param animal
      *            The animal to place on the map.
-     * @return True if the animal was placed. The animal cannot be placed if the map is already occupied.
+     * True if the animal was placed. The animal cannot be placed if the map is already occupied.
      */
-    boolean place(Animal animal);
+    void place(Animal animal);
 
     /**
      * Return true if given position on the map is occupied. Should not be

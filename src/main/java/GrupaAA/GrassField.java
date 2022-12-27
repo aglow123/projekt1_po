@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public abstract class GrassField implements IWorldMap{
+public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     Vector2d lowerLeft, upperRight;
     Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
     int numberOfGrass;
@@ -35,51 +35,36 @@ public abstract class GrassField implements IWorldMap{
         mapBoundary.remove(position);
     }
 
-    @Override
-    public Vector2d canMoveTo(Vector2d position) {
-        if(!position.follows(this.lowerLeft) || !position.precedes(this.upperRight)){
-            if(this.typeOfBounds == 1){
-                if(position.x < this.lowerLeft.x || position.x > this.upperRight.x){
-                    position.x = (position.x)%this.upperRight.x;
-                }
-                if(position.y < this.lowerLeft.y){
-                    position.y = position.y + 1;
-                }
-                else if(position.y > this.upperRight.y){
-                    position.y = position.y - 1;
-                }
-            }
-            else if(typeOfBounds == 2){
-                Random rand = new Random();
-                position = new Vector2d(rand.nextInt(this.upperRight.x), rand.nextInt(this.upperRight.y));
-            }
-        }
-        return position;
-    }
+//    @Override
+//    public Vector2d canMoveTo(Vector2d position) {
+//        if(!position.follows(this.lowerLeft) || !position.precedes(this.upperRight)){
+//            if(this.typeOfBounds == 1){
+//                if(position.x < this.lowerLeft.x || position.x > this.upperRight.x){
+//                    position.x = (position.x)%this.upperRight.x;
+//                }
+//                if(position.y < this.lowerLeft.y){
+//                    position.y = position.y + 1;
+//                }
+//                else if(position.y > this.upperRight.y){
+//                    position.y = position.y - 1;
+//                }
+//            }
+//            else if(typeOfBounds == 2){
+//                Random rand = new Random();
+//                position = new Vector2d(rand.nextInt(this.upperRight.x), rand.nextInt(this.upperRight.y));
+//            }
+//        }
+//        return position;
+//    }
 
     @Override
-    public boolean place(Animal animal) throws IllegalArgumentException{
-        Vector2d newPosition = canMoveTo(animal.getPosition());
-        if (animal.getPosition() != newPosition){
-            if(this.typeOfBounds == 1){
-                animal.turnAround();
-            }
-            else if(this.typeOfBounds == 2){
-                animal.loseHP();
-            }
-            animal.setPosition(newPosition);
-        }
+    public void place(Animal animal) throws IllegalArgumentException{
         if (!this.isOccupied(animal.getPosition())) {
-            if (this.objectAt(animal.getPosition()) instanceof Animal)
-                animals.put(animal.getPosition(), new ArrayList<>());
-            else if (this.objectAt(animal.getPosition()) instanceof Grass){
-                EatAndPlantNewGrass(animal.getPosition());
-            }
+            animals.put(animal.getPosition(), new ArrayList<>());
         }
         animals.get(animal.getPosition()).add(animal);
-//        animal.addObserver(this); if map.place true w animal ??
-        mapBoundary.add((IMapElement) animal);
-        return true;
+        animal.addObserver(this);
+        mapBoundary.add(animal);
     }
 
     @Override
@@ -113,14 +98,20 @@ public abstract class GrassField implements IWorldMap{
     }
 
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
-        //zajme sie tym innym razem
-        Animal animal = animals.get(oldPosition);
-        animals.remove(oldPosition);
-        animals.put(newPosition, animal);
+        ArrayList<Animal> animalList = animals.get(oldPosition);
+        for(Animal animal: animalList){
+            if(animal.getPosition() == newPosition){
+                animalList.remove(animal);
+                if (!this.isOccupied(animal.getPosition())) {
+                    animals.put(animal.getPosition(), new ArrayList<>());
+                }
+                animals.get(animal.getPosition()).add(animal);
+            }
+        }
         mapBoundary.positionChanged(oldPosition, newPosition);
     }
 
-    public String animals(){
-        return animals.toString();
+    public Map<Vector2d, ArrayList<Animal>> animals(){
+        return animals;
     }
 }
