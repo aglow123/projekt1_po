@@ -22,6 +22,7 @@ public class MapBoundary implements IPositionChangeObserver{
     private SortedSet<Vector2d> oy = new TreeSet<>(compY);
 
 
+
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
         remove(oldPosition);

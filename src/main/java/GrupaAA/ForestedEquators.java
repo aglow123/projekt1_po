@@ -5,14 +5,17 @@ import java.util.*;
 public class ForestedEquators extends GrassField{
     Vector2d lowerLeftEquator, upperRightEquator;
 
-    public ForestedEquators(int typeOfBounds, int numberOfGrass){
-        this(new MapBoundary(), typeOfBounds, numberOfGrass, 100, 100);
-    }
-
-    public ForestedEquators(MapBoundary mapBoundary, int typeOfBounds, int numberOfGrass, int height, int width){
-        super(mapBoundary, typeOfBounds, numberOfGrass, height, width);
+    public ForestedEquators(int typeOfBounds, int numberOfGrass, int height, int width){
+//        super(mapBoundary, typeOfBounds, numberOfGrass, height, width);
+        this.mapBoundary = new MapBoundary();
+        this.typeOfBounds = typeOfBounds;   //1 stands for 'globe', 2 stands for 'hell portal'
+        this.lowerLeft = new Vector2d(0, 0);
+        this.upperRight = new Vector2d(width, height);
         this.lowerLeftEquator = new Vector2d(0,height * 2/5);
         this.upperRightEquator = new Vector2d(width,height * 3/5);
+        for(int i=0; i<numberOfGrass; i++){
+            PlantGrass();
+        }
     }
 
     public void PlantGrass(){
