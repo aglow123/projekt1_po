@@ -3,7 +3,6 @@ package GrupaAA;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     //parametry
@@ -54,11 +53,16 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     }
 
     @Override
-    public Object objectAt(Vector2d position) {
+    public ArrayList<Animal> animalsAt(Vector2d position) {
         if (animals.containsKey(position)){
             return animals.get(position);
         }
-        else if (grasses.containsKey(position)){
+        return null;
+    }
+
+    @Override
+    public Grass grassAt(Vector2d position){
+        if (grasses.containsKey(position)){
             return grasses.get(position);
         }
         return null;

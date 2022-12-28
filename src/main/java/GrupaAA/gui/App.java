@@ -10,6 +10,9 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 
+import javax.swing.*;
+import java.util.ArrayList;
+
 import static java.lang.String.format;
 
 
@@ -22,6 +25,10 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
 
     public void init(){
+        //trzeba bedzie zrobic okno wyboru parametrow, zajme sie tym innym razme
+        JFrame frame = new JFrame("Animals");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        TextField typeOfBounds
         this.map = new ForestedEquators(1,10);
         Vector2d[] positions = {new Vector2d(2, 3), new Vector2d(3, 8)};
         this.engine = new SimulationEngineGui(map, positions, this);
@@ -30,20 +37,20 @@ public class App extends javafx.application.Application implements IGuiObserver 
     @Override
     public void start(Stage primaryStage) throws IllegalArgumentException {
         HBox upperPart = new HBox();
-        Button startButton = new Button();
-        TextField userInput = new TextField();
-        startButton.setText("Start");
-        startButton.setOnAction(e -> {
-            if (userInput.getText().isEmpty())
-                return;
-            String[] newMoves = userInput.getText().split(" ");
-            MoveDirection[] newDirection = OptionParser.parse(newMoves);
-//            engine.setDirections(newDirection);
-            new Thread(engine).start();
-        });
+//        Button startButton = new Button();
+//        TextField userInput = new TextField();
+//        startButton.setText("Start");
+//        startButton.setOnAction(e -> {
+//            if (userInput.getText().isEmpty())
+//                return;
+//            String[] newMoves = userInput.getText().split(" ");
+//            MoveDirection[] newDirection = OptionParser.parse(newMoves);
+////            engine.setDirections(newDirection);
+//            new Thread(engine).start();
+//        });
 
-        upperPart.getChildren().add(0, startButton);
-        upperPart.getChildren().add(1, userInput);
+//        upperPart.getChildren().add(0, startButton);
+//        upperPart.getChildren().add(1, userInput);
 
         VBox layout = new VBox();
         grid = new GridPane();
@@ -88,14 +95,20 @@ public class App extends javafx.application.Application implements IGuiObserver 
     void drawObjects(GrassField map, GridPane grid){
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {
-                Object toAdd = map.objectAt(new Vector2d(i, j));
-                if (toAdd == null) {
-                    continue;
+                Grass grassToAdd = map.grassAt(new Vector2d(i, j));
+                if (grassToAdd != null) {
+                    GuiElementBox box = new GuiElementBox(grassToAdd);
+                    grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j + 1);
+                    GridPane.setHalignment(box.vbox, HPos.CENTER);
                 }
-                IMapElement elementToAdd = (IMapElement) toAdd;
-                GuiElementBox box = new GuiElementBox(elementToAdd);
-                grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j + 1);
-                GridPane.setHalignment(box.vbox, HPos.CENTER);
+                ArrayList<Animal> animalsToAdd = map.animalsAt(new Vector2d(i, j));
+                if(animalsToAdd != null){
+                    for(Animal animalToAdd: animalsToAdd){
+                        GuiElementBox box = new GuiElementBox(animalToAdd);
+                        grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j + 1);
+                        GridPane.setHalignment(box.vbox, HPos.CENTER);
+                    }
+                }
             }
         }
 

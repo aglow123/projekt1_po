@@ -1,5 +1,7 @@
 package GrupaAA;
 
+import java.util.ArrayList;
+
 /**
  * The interface responsible for interacting with the map of the world.
  * Assumes that aa.Vector2d and MoveDirection classes are defined.
@@ -21,7 +23,7 @@ public interface IWorldMap {
      *
      * @param position
      *            Position to check.
-     * @return True if the position is occupied.
+     * @return True if the object at given position is instance of Animal.
      */
     boolean isOccupied(Vector2d position);
 
@@ -35,13 +37,22 @@ public interface IWorldMap {
     boolean isPlanted(Vector2d position);
 
     /**
-     * Return an object at a given position.
+     * Return animals at a given position.
      *
      * @param position
      *            The position of the object.
-     * @return Object or null if the position is not occupied.
+     * @return List of animals or null if the position is not occupied.
      */
-    Object objectAt(Vector2d position);
+    ArrayList<Animal> animalsAt(Vector2d position);
+
+    /**
+     * Return grass at a given position.
+     *
+     * @param position
+     *            The position of the object.
+     * @return Grass or null if the position is not planted.
+     */
+    Grass grassAt(Vector2d position);
 
     /**
      * Remove dead animals from the map.
