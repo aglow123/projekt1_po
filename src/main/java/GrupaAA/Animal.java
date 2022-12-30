@@ -133,26 +133,10 @@ public class Animal implements IMapElement {
             default -> {
             }
         }
-
         this.canMoveTo(newPosition);
-
-        //zroibone w simulationengine, mozesz obczaic i pozmieniac tutaj, chyba nie trzeba bedzie sprawdzac zajetosci tylko poprzesuwać i siema
-        if(this.map.objectAt(newPosition) instanceof Grass){    //najpierw walka - FAQ w instrukcji
-//            if (map.isPlanted(newPosition)) {
-//                map.EatGrass(newPosition);
-//                this.raiseHP(plantEnergy);
-                Vector2d oldPosition = this.position;
-                this.position = newPosition;
-                positionChanged(oldPosition, newPosition);
-//            }
-        }
-        else if(this.map.objectAt(newPosition) instanceof Animal){  //najpierw walka - FAQ w instrukcji
-            Animal that = (Animal) this.map.objectAt(newPosition);
-            multiplication(that, whichMutation);
-            Vector2d oldPosition = this.position;
-            this.position = newPosition;
-            positionChanged(oldPosition, newPosition);
-        }
+        Vector2d oldPosition = this.position;
+        this.position = newPosition;
+        positionChanged(oldPosition, newPosition);
     }
 
     void positionChanged(Vector2d oldPosition, Vector2d newPosition) {

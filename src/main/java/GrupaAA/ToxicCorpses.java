@@ -17,6 +17,8 @@ public class ToxicCorpses extends GrassField {
             int x = Genotypes.intGenerator(width - 1);
             int y = Genotypes.intGenerator(height - 1);
             newPosition = new Vector2d(x, y);
+            //nie ma nigdzie zastosowanego prawdopodobienstwa, zaleznosci od statytyk
+            // po posadzeniu trawy beda sie psuc statystyki(?) - odejmowanie ilosci zgonow na danej pozycji?
             if (!isPlanted(newPosition)) {
                 if (corpsesList.containsKey(newPosition) && corpsesList.get(newPosition) != 0) {
                     corpsesList.put(newPosition, corpsesList.get(newPosition) - 1);
