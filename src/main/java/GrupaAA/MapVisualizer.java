@@ -73,7 +73,6 @@ public class MapVisualizer {
     private String drawObject(Vector2d currentPosition) {
         String result = null;
         if (this.map.isOccupied(currentPosition)) {
-            //wrocic tu
             Object object = this.map.animalsAt(currentPosition);
             if (object != null) {
                 result = object.toString();

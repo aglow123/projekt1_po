@@ -40,17 +40,17 @@ public class Animal implements IMapElement {
     }
 
     public String toString(){
-        switch (orientation) {
-            case NORTH : return "^";
-            case EAST : return ">";
-            case SOUTH : return "v";
-            case WEST : return "<";
-            case NORTHWEST : return "NW";
-            case NORTHEAST : return "NE";
-            case SOUTHWEST : return "SW";
-            case SOUTHEAST : return "SE";
-        }
-        return this.toString();
+        return switch (orientation) {
+            case NORTH -> "^";
+            case EAST -> ">";
+            case SOUTH -> "v";
+            case WEST -> "<";
+            case NORTHWEST -> "NW";
+            case NORTHEAST -> "NE";
+            case SOUTHWEST -> "SW";
+            case SOUTHEAST -> "SE";
+//            default -> this.toString();
+        };
     }
     public MapDirection getOrientation(){return this.orientation;}
 
@@ -58,31 +58,31 @@ public class Animal implements IMapElement {
     @Override
     public String getElementName() {
         switch (this.orientation) {
-            case NORTH : {
+            case NORTH -> {
                 return "0.png";
             }
-            case WEST : {
+            case WEST -> {
                 return "6.png";
             }
-            case SOUTH : {
+            case SOUTH -> {
                 return "4.png";
             }
-            case EAST : {
+            case EAST -> {
                 return "2.png";
             }
-            case NORTHWEST : {
+            case NORTHWEST -> {
                 return "7.png";
             }
-            case SOUTHEAST : {
+            case SOUTHEAST -> {
                 return "3.png";
             }
-            case SOUTHWEST : {
+            case SOUTHWEST -> {
                 return "5.png";
             }
-            case NORTHEAST : {
+            case NORTHEAST -> {
                 return "1.png";
             }
-            default : {
+            default -> {
                 return "candy.png";
             }
         }
@@ -104,40 +104,40 @@ public class Animal implements IMapElement {
         this.age +=1;
         Vector2d newPosition = null;
         switch(direction) {
-            case 0 : newPosition = position.add(orientation.toUnitVector());
-            case 1 : {
+            case 0 -> newPosition = position.add(orientation.toUnitVector());
+            case 1 -> {
                 orientation = orientation.next();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case 2 : {
+            case 2 -> {
                 orientation = (orientation.next()).next();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case 3 : {
+            case 3 -> {
                 orientation = ((orientation.next()).next()).next();
                 newPosition = position.subtract(orientation.toUnitVector());
             }
-            case 4 : newPosition = position.subtract(orientation.toUnitVector());
-            case 5 : {
+            case 4 -> newPosition = position.subtract(orientation.toUnitVector());
+            case 5 -> {
                 orientation = ((orientation.previous()).previous()).previous();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case 6 : {
+            case 6 -> {
                 orientation = (orientation.previous()).previous();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            case 7 : {
+            case 7 -> {
                 orientation = orientation.previous();
                 newPosition = position.add(orientation.toUnitVector());
             }
-            default : {
+            default -> {
             }
         }
 
         this.canMoveTo(newPosition);
 
         //zroibone w simulationengine, mozesz obczaic i pozmieniac tutaj, chyba nie trzeba bedzie sprawdzac zajetosci tylko poprzesuwać i siema
-        if(this.map.isPlanted(newPosition)){    //najpierw walka - FAQ w instrukcji
+        if(this.map.objectAt(newPosition) instanceof Grass){    //najpierw walka - FAQ w instrukcji
 //            if (map.isPlanted(newPosition)) {
 //                map.EatGrass(newPosition);
 //                this.raiseHP(plantEnergy);
@@ -146,9 +146,9 @@ public class Animal implements IMapElement {
                 positionChanged(oldPosition, newPosition);
 //            }
         }
-        else if(this.map.isOccupied(newPosition)){  //najpierw walka - FAQ w instrukcji
-//            Animal that = (Animal) this.map.At(newPosition);
-//            multiplication(that, whichMutation);
+        else if(this.map.objectAt(newPosition) instanceof Animal){  //najpierw walka - FAQ w instrukcji
+            Animal that = (Animal) this.map.objectAt(newPosition);
+            multiplication(that, whichMutation);
             Vector2d oldPosition = this.position;
             this.position = newPosition;
             positionChanged(oldPosition, newPosition);

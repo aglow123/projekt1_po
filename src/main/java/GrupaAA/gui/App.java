@@ -25,34 +25,32 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
 
     public void init(){
-        System.out.println("init");
         //trzeba bedzie zrobic okno wyboru parametrow, zajme sie tym innym razme
-//        JFrame frame = new JFrame("Animals");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame frame = new JFrame("Animals");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        TextField typeOfBounds
-        this.map = new ForestedEquators(1,10, 100,100);
+        this.map = new ForestedEquators(1,10);
         Vector2d[] positions = {new Vector2d(2, 3), new Vector2d(3, 8)};
         this.engine = new SimulationEngineGui(map, positions, this);
     }
 
     @Override
     public void start(Stage primaryStage) throws IllegalArgumentException {
-        System.out.println("start");
         HBox upperPart = new HBox();
-        Button startButton = new Button();
-        TextField userInput = new TextField();
-        startButton.setText("Start");
-        startButton.setOnAction(e -> {
-            if (userInput.getText().isEmpty())
-                return;
-            String[] newMoves = userInput.getText().split(" ");
-            MoveDirection[] newDirection = OptionParser.parse(newMoves);
-//            engine.setDirections(newDirection);
-            new Thread(engine).start();
-        });
+//        Button startButton = new Button();
+//        TextField userInput = new TextField();
+//        startButton.setText("Start");
+//        startButton.setOnAction(e -> {
+//            if (userInput.getText().isEmpty())
+//                return;
+//            String[] newMoves = userInput.getText().split(" ");
+//            MoveDirection[] newDirection = OptionParser.parse(newMoves);
+////            engine.setDirections(newDirection);
+//            new Thread(engine).start();
+//        });
 
-        upperPart.getChildren().add(0, startButton);
-        upperPart.getChildren().add(1, userInput);
+//        upperPart.getChildren().add(0, startButton);
+//        upperPart.getChildren().add(1, userInput);
 
         VBox layout = new VBox();
         grid = new GridPane();

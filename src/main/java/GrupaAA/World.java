@@ -10,7 +10,6 @@ public class World {
         try {
             Application.launch(App.class, args);
         } catch(Exception ex){
-            out.println("blabla");
             out.println(ex.getMessage());
             out.println(ex.getClass());
         }
