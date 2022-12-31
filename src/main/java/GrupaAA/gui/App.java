@@ -74,20 +74,20 @@ public class App extends javafx.application.Application implements IGuiObserver 
     void drawHeader(GrassField map, GridPane grid){
         Label label = new Label("y\\x");
         grid.add(label, 0, 0);
-        grid.getColumnConstraints().add(new ColumnConstraints(30));
-        grid.getRowConstraints().add(new RowConstraints(30));
+        grid.getColumnConstraints().add(new ColumnConstraints(20));
+        grid.getRowConstraints().add(new RowConstraints(20));
         GridPane.setHalignment(label, HPos.CENTER);
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             label = new Label(format("%d", i));
             grid.add(label, i - map.setBorders()[0].x + 1, 0);
-            grid.getColumnConstraints().add(new ColumnConstraints(30));
+            grid.getColumnConstraints().add(new ColumnConstraints(20));
             GridPane.setHalignment(label, HPos.CENTER);
 
         }
         for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {
             label = new Label(format("%d", j));
             grid.add(label, 0, map.setBorders()[1].y - j + 1);
-            grid.getRowConstraints().add(new RowConstraints(30));
+            grid.getRowConstraints().add(new RowConstraints(20));
             GridPane.setHalignment(label, HPos.CENTER);
         }
     }
@@ -95,7 +95,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     void drawObjects(GrassField map, GridPane grid){
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {
-                Grass grassToAdd = map.grassAt(new Vector2d(i, j));
+                Grass grassToAdd = this.map.grassAt(new Vector2d(i, j));
                 if (grassToAdd != null) {
                     GuiElementBox box = new GuiElementBox(grassToAdd);
                     grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j + 1);

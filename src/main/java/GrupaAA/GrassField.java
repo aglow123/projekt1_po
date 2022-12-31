@@ -11,27 +11,11 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     int height;
     int width;
 
-
     Vector2d lowerLeft, upperRight;
     Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
     Map<Vector2d, Grass> grasses = new HashMap<>();
     Map<Vector2d, Integer> corpsesList = new HashMap<>();
-//    MapBoundary mapBoundary;
 
-
-    public GrassField(){
-        this(/*new MapBoundary(),*/1,10,100,100);
-    }
-
-    public GrassField(/*MapBoundary mapBoundary,*/ int typeOfBounds, int numberOfGrass, int height, int width){
-//        this.mapBoundary = mapBoundary;
-        this.typeOfBounds = typeOfBounds;   //1 stands for 'globe', 2 stands for 'hell portal'
-        this.lowerLeft = new Vector2d(0, 0);
-        this.upperRight = new Vector2d(width, height);
-        for(int i=0; i<numberOfGrass; i++){
-            PlantGrass();
-        }
-    }
     abstract public void PlantGrass();
 
     public void EatGrass(Vector2d position){
@@ -63,10 +47,8 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
 
     @Override
     public Grass grassAt(Vector2d position){
-        if (grasses.containsKey(position)){
-            return grasses.get(position);
-        }
-        return null;
+        System.out.println(position);
+        return grasses.getOrDefault(position, null);
     }
 
     @Override

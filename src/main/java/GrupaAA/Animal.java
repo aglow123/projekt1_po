@@ -31,8 +31,9 @@ public class Animal implements IMapElement {
 
     public Animal(GrassField map, Vector2d initialPosition){
         this.orientation = MapDirection.NORTH;
-        this.canMoveTo(initialPosition);
+//        this.position = initialPosition;
         this.map = map;
+        this.canMoveTo(initialPosition);
         this.animalGens = genotypes.genotypes;
         this.age = 0;
         this.children = 0;
