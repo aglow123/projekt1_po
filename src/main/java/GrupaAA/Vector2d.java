@@ -64,4 +64,12 @@ public class Vector2d {
         return Objects.hash(this.x, this.y);
     }
 
+    public boolean equals(Object other){
+        if (this == other)
+            return true;
+        if (!(other instanceof Vector2d))
+            return false;
+        Vector2d that = (Vector2d) other;
+        return (this.x == that.x && this.y == that.y);
+    }
 }

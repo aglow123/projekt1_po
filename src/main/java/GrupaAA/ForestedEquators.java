@@ -6,7 +6,7 @@ public class ForestedEquators extends GrassField{
     Vector2d lowerLeftEquator, upperRightEquator;
 
     public ForestedEquators(int typeOfBounds, int numberOfGrass){
-        this(/*new MapBoundary(),*/ typeOfBounds, numberOfGrass, 10, 10);
+        this(/*new MapBoundary(),*/ typeOfBounds, numberOfGrass, 20, 20);
     }
 
     public ForestedEquators(/*MapBoundary mapBoundary,*/ int typeOfBounds, int numberOfGrass, int height, int width){

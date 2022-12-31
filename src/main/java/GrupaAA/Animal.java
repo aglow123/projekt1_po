@@ -8,8 +8,8 @@ public class Animal implements IMapElement {
     //parametry
     int HP ;
 //    int plantEnergy;
-    int birthCost;
-    int minHP;
+    int birthCost = 5;
+    int minHP = 10;
     int maxMutations;
     String whichMutation;
 
@@ -33,6 +33,7 @@ public class Animal implements IMapElement {
         this.orientation = MapDirection.NORTH;
 //        this.position = initialPosition;
         this.map = map;
+        this.HP = initHP;
         this.canMoveTo(initialPosition);
         this.animalGens = genotypes.genotypes;
         this.age = 0;
@@ -134,10 +135,10 @@ public class Animal implements IMapElement {
             default -> {
             }
         }
-        this.canMoveTo(newPosition);
+        this.loseHP(1);
         Vector2d oldPosition = this.position;
-        this.position = newPosition;
-        positionChanged(oldPosition, newPosition);
+        this.canMoveTo(newPosition);
+        positionChanged(oldPosition, this.position);
     }
 
     void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
@@ -153,11 +154,14 @@ public class Animal implements IMapElement {
     }
 
     public void canMoveTo(Vector2d position){
-        if(!position.follows(this.map.lowerLeft) || !position.precedes(this.map.upperRight)){
+        if(!(position.follows(this.map.lowerLeft) & position.precedes(this.map.upperRight))){
+            System.out.println("pajace");
             if(this.map.typeOfBounds == 1){
-                if(position.x < this.map.lowerLeft.x || position.x > this.map.upperRight.x){
-                    position.x = (position.x)%this.map.upperRight.x;
-                    this.turnAround();
+                if(position.x < this.map.lowerLeft.x){
+                    position.x = position.x + this.map.upperRight.x + 1;
+                }
+                else if(position.x > this.map.upperRight.x){
+                    position.x = position.x - this.map.upperRight.x - 1;
                 }
                 if(position.y < this.map.lowerLeft.y){
                     position.y = position.y + 1;
@@ -202,9 +206,10 @@ public class Animal implements IMapElement {
             }
 
             int a1GensLength = (int)Math.round(a1Weight*animal1.animalGens.length);
-            int thisGensLength = (int)Math.round(a2Weight*this.animalGens.length);
-            int babyGensLength = thisGensLength+a1GensLength;
-            int[] babyGens = new int[babyGensLength];
+            int thisGensLength = Genotypes.maxGenLength - a1GensLength;
+//            int thisGensLength = (int)Math.round(a2Weight*this.animalGens.length);
+//            int babyGensLength = thisGensLength+a1GensLength;
+            int[] babyGens = new int[Genotypes.maxGenLength];
 
             if(animal1.HP>=this.HP) {
                 setChildrenGens(animal1, this, babyGens, a1GensLength, thisGensLength, setSide);

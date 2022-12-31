@@ -24,9 +24,9 @@ public class GuiElementBox {
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
-        Label label = new Label(element.getPosition().toString());
-        label.setMaxHeight(3);
-        this.vbox = new VBox(imageView, label);
+//        Label label = new Label(element.getPosition().toString());
+//        label.setMaxHeight(3);
+        this.vbox = new VBox(imageView);
         this.vbox.setAlignment(Pos.CENTER);
     }
 }

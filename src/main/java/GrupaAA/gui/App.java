@@ -25,43 +25,33 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
 
     public void init(){
-        //trzeba bedzie zrobic okno wyboru parametrow, zajme sie tym innym razme
-        JFrame frame = new JFrame("Animals");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //trzeba bedzie zrobic okno wyboru parametrow
+//        JFrame frame = new JFrame("Animals");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        TextField typeOfBounds
-        this.map = new ForestedEquators(1,10);
-        Vector2d[] positions = {new Vector2d(2, 3), new Vector2d(3, 8)};
-        this.engine = new SimulationEngineGui(map, positions, this);
+        this.map = new ForestedEquators(1,50);
+        Vector2d[] positions = {new Vector2d(2, 3), new Vector2d(3, 2), new Vector2d(2, 2)};
+        this.engine = new SimulationEngineGui(map, positions, this, "Random");
     }
 
     @Override
-    public void start(Stage primaryStage) throws IllegalArgumentException {
+    public void start(Stage primaryStage) throws IllegalArgumentException, InterruptedException {
         HBox upperPart = new HBox();
-//        Button startButton = new Button();
-//        TextField userInput = new TextField();
-//        startButton.setText("Start");
-//        startButton.setOnAction(e -> {
-//            if (userInput.getText().isEmpty())
-//                return;
-//            String[] newMoves = userInput.getText().split(" ");
-//            MoveDirection[] newDirection = OptionParser.parse(newMoves);
-////            engine.setDirections(newDirection);
-//            new Thread(engine).start();
-//        });
-
-//        upperPart.getChildren().add(0, startButton);
-//        upperPart.getChildren().add(1, userInput);
+        System.out.println("start");
 
         VBox layout = new VBox();
         grid = new GridPane();
 
         layout.getChildren().add(0, upperPart);
         layout.getChildren().add(1, grid);
-
         createGridMap();
         Scene scene = new Scene(layout, width, height);
         primaryStage.setScene(scene);
         primaryStage.show();
+        if(this.map.animals().size() > 0) {
+            new Thread(engine).start();
+//            Thread.sleep(2000);
+        }
     }
 
     void createGridMap(){
@@ -92,6 +82,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
         }
     }
 
+    //czasami znika czesc cukierkow - DO SPRWDZNIA
     void drawObjects(GrassField map, GridPane grid){
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {

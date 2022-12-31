@@ -12,7 +12,7 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     int width;
 
     Vector2d lowerLeft, upperRight;
-    Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
+    public Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
     Map<Vector2d, Grass> grasses = new HashMap<>();
     Map<Vector2d, Integer> corpsesList = new HashMap<>();
 
@@ -47,8 +47,10 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
 
     @Override
     public Grass grassAt(Vector2d position){
-        System.out.println(position);
-        return grasses.getOrDefault(position, null);
+        if (grasses.containsKey(position)){
+            return grasses.get(position);
+        }
+        return null;
     }
 
     @Override
@@ -72,10 +74,13 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
 
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
-        ArrayList<Animal> animalList = animals.get(oldPosition);
+        ArrayList<Animal> animalList = new ArrayList<>(animals.get(oldPosition));
         for(Animal animal: animalList){
             if(animal.getPosition() == newPosition){
-                animalList.remove(animal);
+                animals.get(oldPosition).remove(animal);
+                if(animals.get(oldPosition).size() == 0){
+                    animals.remove(oldPosition);
+                }
                 if (!this.isOccupied(animal.getPosition())) {
                     animals.put(animal.getPosition(), new ArrayList<>());
                 }
@@ -85,8 +90,24 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
 //        mapBoundary.positionChanged(oldPosition, newPosition);
     }
 
-    public Map<Vector2d, ArrayList<Animal>> animals(){
-        return animals;
+    public ArrayList<Animal> animals(){
+        ArrayList<Animal> allAnimals = new ArrayList<>();
+        for(ArrayList<Animal> animalList : animals.values()){
+            allAnimals.addAll(animalList);
+        }
+        return allAnimals;
+    }
+
+    public ArrayList<Animal> animalsOn(Vector2d position){
+        return new ArrayList<>(animals.get(position));
+    }
+
+    public ArrayList<Vector2d> positions(){
+        return new ArrayList<>(animals.keySet());
+    }
+
+    public ArrayList<Grass> grasses(){
+        return new ArrayList<>(grasses.values());
     }
 
     @Override
@@ -99,6 +120,9 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
                     else
                         corpsesList.put(animal.getPosition(), 1);
                     animalList.remove(animal);
+                    if(animalList.size() == 0){
+                        animals.remove(animal.getPosition());
+                    }
 //                    mapBoundary.remove(animal.getPosition());
                     animal.removeObserver(this);
                 }

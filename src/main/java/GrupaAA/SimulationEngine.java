@@ -14,9 +14,10 @@ public class SimulationEngine implements IEngine, Runnable{
     protected GrassField map;
     protected Vector2d[] positions;
 
-    public SimulationEngine(GrassField map, Vector2d[] positions){
+    public SimulationEngine(GrassField map, Vector2d[] positions, String chosenBehaviour){
         this.map = map;
         this.positions = positions;
+        this.whichBehavior = chosenBehaviour;
         for (Vector2d position: positions) {
             new Animal(map, position);
         }
@@ -28,8 +29,8 @@ public class SimulationEngine implements IEngine, Runnable{
             day = i;
             map.cleanDeadAnimal();
             moveAnimals();
-            eatGrasses();
-            makeBabies();
+//            eatGrasses();
+//            makeBabies();
             for(int j=0;j<dailyNewGrass;j++){
                 if(!map.IsFull()) {
                     map.PlantGrass();
@@ -42,32 +43,33 @@ public class SimulationEngine implements IEngine, Runnable{
     }
 
     public void moveAnimals(){
-        for(ArrayList<Animal> animalList: map.animals().values()){
-            for(Animal animal : animalList){
-                int genIndex = day % Genotypes.maxGenLength; //zrobic jakis random
-                genIndex = Variants.animalBehavior(whichBehavior, genIndex);
-                animal.move(animal.animalGens[genIndex]);
-            }
+        ArrayList<Animal> animalList = map.animals();
+        for(int animalIndex=0; animalIndex<animalList.size(); animalIndex++){
+            Animal animal = animalList.get(animalIndex);
+            int genIndex = day % Genotypes.maxGenLength; //zrobic jakis random
+            genIndex = Variants.animalBehavior(whichBehavior, genIndex);
+            animal.move(animal.animalGens[genIndex]);
         }
     }
-
-    public void eatGrasses(){
-        for(Grass grass: map.grasses.values()){
-            if(map.animals.get(grass.position) != null){
-                findWinner(map.animals.get(grass.position),1).get(0).raiseHP(plantEnergy);
-                map.EatGrass(grass.position);
-            }
-        }
-    }
-
-    public void makeBabies(){
-        for(ArrayList<Animal> animalList: map.animals().values()){
-            if(animalList.size() >= 2){
-                ArrayList<Animal> parents = findWinner(animalList, 2);
-                parents.get(0).multiplication(parents.get(1), "mutation");
-            }
-        }
-    }
+//
+//    public void eatGrasses(){
+//        for(Grass grass: map.grasses.values()){
+//            if(map.animals.get(grass.position) != null){
+//                findWinner(map.animals.get(grass.position),1).get(0).raiseHP(plantEnergy);
+//                map.EatGrass(grass.position);
+//            }
+//        }
+//    }
+//
+//    public void makeBabies(){
+//
+//        for(ArrayList<Animal> animalList: map.animals().values()){
+//            if(animalList.size() >= 2){
+//                ArrayList<Animal> parents = findWinner(animalList, 2);
+//                parents.get(0).multiplication(parents.get(1), "mutation");
+//            }
+//        }
+//    }
 
     public ArrayList<Animal> findWinner(ArrayList<Animal> list, int numOfWinners){
         if(list.size() == numOfWinners){

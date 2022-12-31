@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Genotypes {
 
-    static int maxGenLength;
+    static int maxGenLength = 10;
     public int[] genotypes;
 
     public Genotypes(){
@@ -13,7 +13,7 @@ public class Genotypes {
     }
     public static int intGenerator(int max){
         Random generator = new Random();
-        return generator.nextInt(max) + 1;
+        return generator.nextInt(max);
     }
     public void genGenerator(){
         for(int i = 0; i< genotypes.length; i++){
