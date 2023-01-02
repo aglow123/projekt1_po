@@ -1,16 +1,10 @@
 package GrupaAA;
 
 import javafx.application.Platform;
-
-import java.security.spec.RSAOtherPrimeInfo;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SimulationEngineGui extends SimulationEngine {
-    private IGuiObserver observer;
-
-    private final int moveDelay = 300;
+    private final IGuiObserver observer;
 
     public SimulationEngineGui(GrassField map, Vector2d[] positions, IGuiObserver observer, String chosenBehaviour){
         super(map, positions, chosenBehaviour);
@@ -24,12 +18,13 @@ public class SimulationEngineGui extends SimulationEngine {
     @Override
     public void run() {
         Platform.runLater(this::reload);
-
+        int day = 1;
         while(this.map.animals().size() > 0) {
-//            sleepThread();
+            map.cleanDeadAnimal();
             moveAnimals();
             eatGrasses();
             makeBabies();
+            plantDailyGrass();
             System.out.println(map.animals);
         }
 
@@ -37,6 +32,7 @@ public class SimulationEngineGui extends SimulationEngine {
 
     public void sleepThread(){
         try {
+            int moveDelay = 300;
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
             System.out.println("interrupted exception on sleep");
@@ -78,6 +74,17 @@ public class SimulationEngineGui extends SimulationEngine {
                 ArrayList<Animal> parents = findWinner(animalList, 2);
                 parents.get(0).multiplication(parents.get(1), "mutation");
                 Platform.runLater(this::reload);
+            }
+        }
+    }
+
+    public void plantDailyGrass(){
+        for(int i = 0;i < dailyNewGrass; i++){
+            if(!map.IsFull()) {
+                map.PlantGrass();
+            }
+            else{
+                break;
             }
         }
     }

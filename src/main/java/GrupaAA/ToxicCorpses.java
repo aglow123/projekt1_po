@@ -1,9 +1,10 @@
 package GrupaAA;
 
+import java.util.Random;
+
 public class ToxicCorpses extends GrassField {
 
     public ToxicCorpses() {
-        //this.mapBoundary = new MapBoundary();
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width, height);
         for (int i = 0; i < numberOfGrass; i++) {
@@ -12,13 +13,13 @@ public class ToxicCorpses extends GrassField {
     }
 
     public void PlantGrass() {
+        int x, y;
         Vector2d newPosition;
+        Random rand = new Random();
         while(true){
-            int x = Genotypes.intGenerator(width - 1);
-            int y = Genotypes.intGenerator(height - 1);
+            x = rand.nextInt(width - 1);
+            y = rand.nextInt(height - 1);
             newPosition = new Vector2d(x, y);
-            //nie ma nigdzie zastosowanego prawdopodobienstwa, zaleznosci od statytyk
-            // po posadzeniu trawy beda sie psuc statystyki(?) - odejmowanie ilosci zgonow na danej pozycji?
             if (!isPlanted(newPosition)) {
                 if (corpsesList.containsKey(newPosition) && corpsesList.get(newPosition) != 0) {
                     corpsesList.put(newPosition, corpsesList.get(newPosition) - 1);
@@ -32,7 +33,6 @@ public class ToxicCorpses extends GrassField {
         }
         Grass grass = new Grass(newPosition);
         grasses.put(newPosition, grass);
-        //mapBoundary.add(grass);
     }
 }
 

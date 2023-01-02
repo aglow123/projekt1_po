@@ -6,10 +6,10 @@ public class ForestedEquators extends GrassField{
     Vector2d lowerLeftEquator, upperRightEquator;
 
     public ForestedEquators(int typeOfBounds, int numberOfGrass){
-        this(/*new MapBoundary(),*/ typeOfBounds, numberOfGrass, 20, 20);
+        this(typeOfBounds, numberOfGrass, 20, 20);
     }
 
-    public ForestedEquators(/*MapBoundary mapBoundary,*/ int typeOfBounds, int numberOfGrass, int height, int width){
+    public ForestedEquators(int typeOfBounds, int numberOfGrass, int height, int width){
         this.typeOfBounds = typeOfBounds;   //1 stands for 'globe', 2 stands for 'hell portal'
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width, height);
@@ -50,14 +50,5 @@ public class ForestedEquators extends GrassField{
         }
         Grass grass = new Grass(newPosition);
         grasses.put(newPosition, grass);
-//        mapBoundary.add(grass);
     }
-
-//    public boolean isOccupied(Vector2d position){
-//        return super.isOccupied(position) || isPlanted(position);
-//    }
-
-//    public Vector2d[] setBorders(){
-//        return new Vector2d[]{mapBoundary.lowerLeft(), mapBoundary.upperRight()};
-//    }
 }

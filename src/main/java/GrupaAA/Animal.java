@@ -7,7 +7,6 @@ public class Animal implements IMapElement {
 
     //parametry
     int HP ;
-//    int plantEnergy;
     int birthCost = 5;
     int minHP = 10;
     int maxMutations;
@@ -31,7 +30,6 @@ public class Animal implements IMapElement {
 
     public Animal(GrassField map, Vector2d initialPosition){
         this.orientation = MapDirection.NORTH;
-//        this.position = initialPosition;
         this.map = map;
         this.HP = initHP;
         this.canMoveTo(initialPosition);
@@ -51,7 +49,6 @@ public class Animal implements IMapElement {
             case NORTHEAST -> "NE";
             case SOUTHWEST -> "SW";
             case SOUTHEAST -> "SE";
-//            default -> this.toString();
         };
     }
     public MapDirection getOrientation(){return this.orientation;}
@@ -155,7 +152,6 @@ public class Animal implements IMapElement {
 
     public void canMoveTo(Vector2d position){
         if(!(position.follows(this.map.lowerLeft) & position.precedes(this.map.upperRight))){
-            System.out.println("pajace");
             if(this.map.typeOfBounds == 1){
                 if(position.x < this.map.lowerLeft.x){
                     position.x = position.x + this.map.upperRight.x + 1;

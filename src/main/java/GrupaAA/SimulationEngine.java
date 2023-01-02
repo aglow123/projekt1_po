@@ -3,7 +3,7 @@ package GrupaAA;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class SimulationEngine implements IEngine, Runnable{
+public abstract class SimulationEngine implements IEngine, Runnable{
     //parametry
     int maxDays;
     String whichBehavior;
@@ -24,52 +24,7 @@ public class SimulationEngine implements IEngine, Runnable{
     }
 
     @Override
-    public void run(){
-        for(int i =0; i<maxDays; i++) {
-            day = i;
-            map.cleanDeadAnimal();
-            moveAnimals();
-//            eatGrasses();
-//            makeBabies();
-            for(int j=0;j<dailyNewGrass;j++){
-                if(!map.IsFull()) {
-                    map.PlantGrass();
-                }
-                else{
-                    break;
-                }
-            }
-        }
-    }
-
-    public void moveAnimals(){
-        ArrayList<Animal> animalList = map.animals();
-        for(int animalIndex=0; animalIndex<animalList.size(); animalIndex++){
-            Animal animal = animalList.get(animalIndex);
-            int genIndex = day % Genotypes.maxGenLength; //zrobic jakis random
-            genIndex = Variants.animalBehavior(whichBehavior, genIndex);
-            animal.move(animal.animalGens[genIndex]);
-        }
-    }
-//
-//    public void eatGrasses(){
-//        for(Grass grass: map.grasses.values()){
-//            if(map.animals.get(grass.position) != null){
-//                findWinner(map.animals.get(grass.position),1).get(0).raiseHP(plantEnergy);
-//                map.EatGrass(grass.position);
-//            }
-//        }
-//    }
-//
-//    public void makeBabies(){
-//
-//        for(ArrayList<Animal> animalList: map.animals().values()){
-//            if(animalList.size() >= 2){
-//                ArrayList<Animal> parents = findWinner(animalList, 2);
-//                parents.get(0).multiplication(parents.get(1), "mutation");
-//            }
-//        }
-//    }
+    abstract public void run();
 
     public ArrayList<Animal> findWinner(ArrayList<Animal> list, int numOfWinners){
         if(list.size() == numOfWinners){

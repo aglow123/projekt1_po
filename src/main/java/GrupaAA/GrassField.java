@@ -20,7 +20,6 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
 
     public void EatGrass(Vector2d position){
         this.grasses.remove(position);
-//        mapBoundary.remove(position);
     }
 
     public boolean IsFull(){
@@ -34,7 +33,6 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
         }
         animals.get(animal.getPosition()).add(animal);
         animal.addObserver(this);
-//        mapBoundary.add(animal);
     }
 
     @Override
@@ -68,9 +66,6 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     public Vector2d[] setBorders(){
         return new Vector2d[]{this.lowerLeft, this.upperRight};
     }
-//    public Vector2d[] setBorders(){
-//        return new Vector2d[]{mapBoundary.lowerLeft(), mapBoundary.upperRight()};
-//    }
 
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
@@ -87,7 +82,6 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
                 animals.get(animal.getPosition()).add(animal);
             }
         }
-//        mapBoundary.positionChanged(oldPosition, newPosition);
     }
 
     public ArrayList<Animal> animals(){
@@ -112,20 +106,20 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
 
     @Override
     public void cleanDeadAnimal(){
-        for(ArrayList<Animal> animalList: animals.values()){
-            for(Animal animal : animalList){
-                if(animal.HP <= 0){
-                    if(corpsesList.containsKey(animal.getPosition()))
-                        corpsesList.put(animal.getPosition(),corpsesList.get(animal.getPosition())+1);
-                    else
-                        corpsesList.put(animal.getPosition(), 1);
-                    animalList.remove(animal);
-                    if(animalList.size() == 0){
-                        animals.remove(animal.getPosition());
-                    }
-//                    mapBoundary.remove(animal.getPosition());
-                    animal.removeObserver(this);
+        ArrayList<Animal> allAnimals = animals();
+        for(int animalIndex=0; animalIndex<allAnimals.size(); animalIndex++){
+            Animal animal = allAnimals.get(animalIndex);
+            if(animal.HP <= 0){
+                if(corpsesList.containsKey(animal.getPosition()))
+                    corpsesList.put(animal.getPosition(),corpsesList.get(animal.getPosition())+1);
+                else {
+                    corpsesList.put(animal.getPosition(), 1);
                 }
+                animals.get(animal.getPosition()).remove(animal);
+                if(animals.get(animal.getPosition()).size() == 0){
+                    animals.remove(animal.getPosition());
+                }
+                animal.removeObserver(this);
             }
         }
     }
