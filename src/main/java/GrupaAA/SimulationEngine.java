@@ -5,21 +5,21 @@ import java.util.Random;
 
 public abstract class SimulationEngine implements IEngine, Runnable{
     //parametry
-    int maxDays;
     String whichBehavior;
+    int minMutation;
+    int maxMutation;
+    String whichMutation;
     int dailyNewGrass;
     int plantEnergy;
 
-    int day = 0 ;
     protected GrassField map;
     protected Vector2d[] positions;
 
-    public SimulationEngine(GrassField map, Vector2d[] positions, String chosenBehaviour){
+    public SimulationEngine(GrassField map, Vector2d[] positions, int initHP, int birthCost, int minHP, int genLength){
         this.map = map;
         this.positions = positions;
-        this.whichBehavior = chosenBehaviour;
         for (Vector2d position: positions) {
-            new Animal(map, position);
+            new Animal(map, position, initHP, birthCost, minHP, genLength);
         }
     }
 

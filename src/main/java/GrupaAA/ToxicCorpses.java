@@ -4,15 +4,17 @@ import java.util.Random;
 
 public class ToxicCorpses extends GrassField {
 
-    public ToxicCorpses() {
+    public ToxicCorpses(int height, int width, int typeOfBounds, int numberOfGrass) {
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width, height);
+        this.typeOfBounds = typeOfBounds;
         for (int i = 0; i < numberOfGrass; i++) {
             PlantGrass();
         }
     }
 
     public void PlantGrass() {
+        //ogarnac prawdopodobienstwo sadzenia trawy
         int x, y;
         Vector2d newPosition;
         Random rand = new Random();

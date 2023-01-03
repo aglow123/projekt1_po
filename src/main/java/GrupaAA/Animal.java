@@ -5,34 +5,25 @@ import java.util.Random;
 
 public class Animal implements IMapElement {
 
-    //parametry
-    int HP ;
-    int birthCost = 5;
-    int minHP = 10;
-    int maxMutations;
-    String whichMutation;
-
-
-    private static final Vector2d DEF_POSITION = new Vector2d(2,2);
-    private static final int initHP = 100;
-    public Genotypes genotypes = new Genotypes();
-    public int[] animalGens;
     private MapDirection orientation;
-    private Vector2d position;
     private GrassField map;
+    int HP ;
+    int birthCost;
+    int minHP;
+    private Vector2d position;
+    public int[] animalGens;
     int age;
     int children;
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
-    public Animal(GrassField map){
-        this(map, DEF_POSITION);
-    }
-
-    public Animal(GrassField map, Vector2d initialPosition){
+    public Animal(GrassField map, Vector2d initialPosition, int initHP, int birthCost, int minHP, int genLength){
         this.orientation = MapDirection.NORTH;
         this.map = map;
         this.HP = initHP;
+        this.birthCost = birthCost;
+        this.minHP = minHP;
         this.canMoveTo(initialPosition);
+        Genotypes genotypes = new Genotypes(genLength);
         this.animalGens = genotypes.genotypes;
         this.age = 0;
         this.children = 0;
@@ -51,7 +42,7 @@ public class Animal implements IMapElement {
             case SOUTHEAST -> "SE";
         };
     }
-    public MapDirection getOrientation(){return this.orientation;}
+//    public MapDirection getOrientation(){return this.orientation;}
 
     public Vector2d getPosition(){return this.position;}
     @Override
@@ -191,16 +182,15 @@ public class Animal implements IMapElement {
     }
 
 
-    public void multiplication(Animal animal1, String whichMutation){
+    public void multiplication(Animal animal1, String whichMutation, int minMutation, int maxMutation){
         if(animal1.HP>minHP && this.HP>minHP) {
             int setSide = Genotypes.intGenerator(2); //0-lewa, 1-prawa
             double a1Weight = 0.25;
-            double a2Weight = 0.75;
+//            double a2Weight = 0.75;
             if(animal1.HP>=this.HP){
                 a1Weight = 0.75;
-                a2Weight = 0.25;
+//                a2Weight = 0.25;
             }
-
             int a1GensLength = (int)Math.round(a1Weight*animal1.animalGens.length);
             int thisGensLength = Genotypes.maxGenLength - a1GensLength;
 //            int thisGensLength = (int)Math.round(a2Weight*this.animalGens.length);
@@ -217,13 +207,11 @@ public class Animal implements IMapElement {
             int healthPoint = birthCost*2;
             animal1.loseHP(birthCost);
             this.loseHP(birthCost); //zajmie miejsce rodzica w animals bo już jest taki klucz
-            Animal baby = new Animal(this.map, animal1.position);
+            Animal baby = new Animal(this.map, animal1.position, healthPoint, this.birthCost, this.minHP, Genotypes.maxGenLength);
             baby.animalGens = babyGens;
-            baby.HP = healthPoint;
             animal1.children +=1;
             this.children +=1;
-
-            Variants.mutation(baby, whichMutation);
+            Variants.mutation(baby, whichMutation, minMutation, maxMutation);
         }
 
     }

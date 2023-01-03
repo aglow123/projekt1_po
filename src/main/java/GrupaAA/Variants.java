@@ -2,8 +2,9 @@ package GrupaAA;
 
 public class Variants {
 
-    public static void mutation(Animal baby, String whichOne){
+    public static void mutation(Animal baby, String whichOne, int minMutation, int maxMutation){
         int howManyGens=Genotypes.intGenerator(5);
+        //trzeba wykorzystać min i max mutation
 //        System.out.println(howManyGens);
         if(whichOne.equals("Random")){
             for(int i =0; i<howManyGens; i++){
@@ -26,7 +27,7 @@ public class Variants {
     public static int animalBehavior(String whichBehaviour, int nextMove) {
         if (whichBehaviour.equals("Random")) {
             int random = Genotypes.intGenerator(10);
-            if (random <= 2) {
+            if (random < 2) {
                 nextMove = Genotypes.intGenerator(Genotypes.maxGenLength);
             }
         }

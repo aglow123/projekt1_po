@@ -5,13 +5,11 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 
-import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.String.format;
 
@@ -20,18 +18,53 @@ public class App extends javafx.application.Application implements IGuiObserver 
     private SimulationEngineGui engine;
     private GridPane grid;
     private GrassField map;
-    private final int width = 500;
-    private final int height = 500;
+    private boolean treeVariant = true;   //true - forestedEquators, false - toxicCorpses
+    private int initAnimalNumber = 5;
+    private int height = 20;
+    private int width = 20;
+    private int typeOfBounds = 1;
+    private int numberOfGrass = 50;
+    private int genLength = 10;
+    private int initHP = 10;
+    private int birthCost = 5;
+    private int minHP = 10;
+    private int dailyNewGrass = 10;
+    private String animalBehaviour = "Random";
+    private int minMutation = 3;
+    private int maxMutation = 5;
+    private String mutation = "Random";
+    private int plantEnergy = 2;
 
 
     public void init(){
-        //trzeba bedzie zrobic okno wyboru parametrow
-//        JFrame frame = new JFrame("Animals");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        TextField typeOfBounds
-        this.map = new ForestedEquators(1,50);
-        Vector2d[] positions = {new Vector2d(2, 3), new Vector2d(3, 2), new Vector2d(2, 2)};
-        this.engine = new SimulationEngineGui(map, positions, this, "Random");
+        //trzeba bedzie zrobic okno wyboru dla wszystkich parametrow
+        /*
+
+
+         */
+
+        if(treeVariant) {
+            this.map = new ForestedEquators(height, width, typeOfBounds, numberOfGrass);
+        }
+        else{
+            this.map = new ToxicCorpses(height, width, typeOfBounds, numberOfGrass);
+        }
+        Vector2d[] positions = positions(initAnimalNumber, height, width);
+        this.engine = new SimulationEngineGui(map, positions, initHP, birthCost, minHP, genLength, dailyNewGrass, animalBehaviour, minMutation, maxMutation, mutation, plantEnergy, this);
+    }
+
+    public Vector2d[] positions(int initAnimalNumber, int height, int width){
+        Vector2d[] positions = new Vector2d[initAnimalNumber];
+        int x, y;
+        Vector2d newPosition;
+        Random rand = new Random();
+        for(int i=0; i<initAnimalNumber; i++){
+            x = rand.nextInt(width);
+            y = rand.nextInt(height);
+            newPosition = new Vector2d(x, y);
+            positions[i] = newPosition;
+        }
+        return positions;
     }
 
     @Override
@@ -82,7 +115,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
         }
     }
 
-    //czasami znika czesc cukierkow - DO SPRWDZNIA
+    //czasami znika czesc cukierkow - DO SPRAWDZENIA
     void drawObjects(GrassField map, GridPane grid){
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {

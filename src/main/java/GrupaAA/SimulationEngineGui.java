@@ -6,8 +6,14 @@ import java.util.ArrayList;
 public class SimulationEngineGui extends SimulationEngine {
     private final IGuiObserver observer;
 
-    public SimulationEngineGui(GrassField map, Vector2d[] positions, IGuiObserver observer, String chosenBehaviour){
-        super(map, positions, chosenBehaviour);
+    public SimulationEngineGui(GrassField map, Vector2d[] positions, int initHP, int birthCost, int minHP, int genLength, int dailyNewGrass, String animalBehaviour, int minMutation, int maxMutation, String mutation, int plantEnergy, IGuiObserver observer){
+        super(map, positions, initHP, birthCost, minHP, genLength);
+        this.dailyNewGrass = dailyNewGrass;
+        this.whichBehavior = animalBehaviour;
+        this.minMutation = minMutation;
+        this.maxMutation = maxMutation;
+        this.whichMutation = mutation;
+        this.plantEnergy = plantEnergy;
         this.observer = observer;
     }
 
@@ -18,7 +24,6 @@ public class SimulationEngineGui extends SimulationEngine {
     @Override
     public void run() {
         Platform.runLater(this::reload);
-        int day = 1;
         while(this.map.animals().size() > 0) {
             map.cleanDeadAnimal();
             moveAnimals();
@@ -44,7 +49,7 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int animalIndex=0; animalIndex<allAnimals.size(); animalIndex++){
             Animal animal = allAnimals.get(animalIndex);
             sleepThread();
-            int genIndex =  day % Genotypes.maxGenLength; //zrobic jakis random
+            int genIndex =  /*day % */Genotypes.maxGenLength; //zrobic jakis random
             genIndex = Variants.animalBehavior(whichBehavior, genIndex);
             animal.move(animal.animalGens[genIndex]);
         }
@@ -69,10 +74,10 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int posIndex=0; posIndex<positions.size(); posIndex++){
             ArrayList<Animal> animalList = map.animalsOn(positions.get(posIndex));
             if(animalList.size() >= 2){
-                System.out.println("makebabies");
+//                System.out.println("makebabies");
                 sleepThread();
                 ArrayList<Animal> parents = findWinner(animalList, 2);
-                parents.get(0).multiplication(parents.get(1), "mutation");
+                parents.get(0).multiplication(parents.get(1), whichMutation, minMutation, maxMutation);
                 Platform.runLater(this::reload);
             }
         }

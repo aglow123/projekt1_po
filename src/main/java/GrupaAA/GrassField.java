@@ -6,10 +6,9 @@ import java.util.Map;
 
 public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
     //parametry
-    int typeOfBounds;
-    int numberOfGrass;
     int height;
     int width;
+    int typeOfBounds;
 
     Vector2d lowerLeft, upperRight;
     public Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
