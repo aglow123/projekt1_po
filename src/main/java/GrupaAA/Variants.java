@@ -3,9 +3,7 @@ package GrupaAA;
 public class Variants {
 
     public static void mutation(Animal baby, String whichOne, int minMutation, int maxMutation){
-        int howManyGens=Genotypes.intGenerator(5);
-        //trzeba wykorzystać min i max mutation
-//        System.out.println(howManyGens);
+        int howManyGens=Genotypes.intGenerator(maxMutation-minMutation)+minMutation;
         if(whichOne.equals("Random")){
             for(int i =0; i<howManyGens; i++){
                 int randomPosition = Genotypes.intGenerator(baby.animalGens.length);

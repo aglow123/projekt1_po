@@ -31,16 +31,7 @@ public class Animal implements IMapElement {
     }
 
     public String toString(){
-        return switch (orientation) {
-            case NORTH -> "^";
-            case EAST -> ">";
-            case SOUTH -> "v";
-            case WEST -> "<";
-            case NORTHWEST -> "NW";
-            case NORTHEAST -> "NE";
-            case SOUTHWEST -> "SW";
-            case SOUTHEAST -> "SE";
-        };
+        return String.valueOf(this.HP);
     }
 //    public MapDirection getOrientation(){return this.orientation;}
 

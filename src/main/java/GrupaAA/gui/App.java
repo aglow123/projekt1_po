@@ -1,20 +1,46 @@
 package GrupaAA.gui;
 
 import GrupaAA.*;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 import static java.lang.String.format;
 
 
 public class App extends javafx.application.Application implements IGuiObserver {
+    //Poprawić wywołanie setVariants() oraz zmienic warianty na Stringi
+    public TextField width1;
+    public TextField initAnimalNumber1;
+    public TextField minHP1;
+    public TextField genLength1;
+    public TextField birthCost1;
+    public TextField maxMutation1;
+    public TextField minMutation1;
+    public TextField initHP1;
+    public TextField dailyNewGrass1;
+    public TextField plantEnergy1;
+    public TextField numberOfGrass1;
+    public TextField height1;
+    public ToggleGroup toggle_grass;
+    public ToggleGroup toggle_mutation;
+    public ToggleGroup toggle_behavior;
+    public ToggleGroup toggle_map;
     private SimulationEngineGui engine;
     private GridPane grid;
     private GrassField map;
@@ -37,20 +63,14 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
 
     public void init(){
-        //trzeba bedzie zrobic okno wyboru dla wszystkich parametrow
-        /*
-
-
-         */
-
-        if(treeVariant) {
-            this.map = new ForestedEquators(height, width, typeOfBounds, numberOfGrass);
-        }
-        else{
-            this.map = new ToxicCorpses(height, width, typeOfBounds, numberOfGrass);
-        }
-        Vector2d[] positions = positions(initAnimalNumber, height, width);
-        this.engine = new SimulationEngineGui(map, positions, initHP, birthCost, minHP, genLength, dailyNewGrass, animalBehaviour, minMutation, maxMutation, mutation, plantEnergy, this);
+//        if(treeVariant) {
+//            this.map = new ForestedEquators(height, width, typeOfBounds, numberOfGrass);
+//        }
+//        else{
+//            this.map = new ToxicCorpses(height, width, typeOfBounds, numberOfGrass);
+//        }
+//        Vector2d[] positions = positions(initAnimalNumber, height, width);
+//        this.engine = new SimulationEngineGui(map, positions, initHP, birthCost, minHP, genLength, dailyNewGrass, animalBehaviour, minMutation, maxMutation, mutation, plantEnergy, this);
     }
 
     public Vector2d[] positions(int initAnimalNumber, int height, int width){
@@ -68,23 +88,29 @@ public class App extends javafx.application.Application implements IGuiObserver 
     }
 
     @Override
-    public void start(Stage primaryStage) throws IllegalArgumentException, InterruptedException {
-        HBox upperPart = new HBox();
-        System.out.println("start");
+    public void start(Stage primaryStage) throws IllegalArgumentException, InterruptedException, IOException {
 
-        VBox layout = new VBox();
-        grid = new GridPane();
-
-        layout.getChildren().add(0, upperPart);
-        layout.getChildren().add(1, grid);
-        createGridMap();
-        Scene scene = new Scene(layout, width, height);
-        primaryStage.setScene(scene);
+        URL url = new File("src/main/resources/user_window.fxml").toURI().toURL();
+        Parent root = FXMLLoader.load(url);
+        primaryStage.setScene(new Scene(root));
+        primaryStage.sizeToScene();
         primaryStage.show();
-        if(this.map.animals().size() > 0) {
-            new Thread(engine).start();
-//            Thread.sleep(2000);
-        }
+//        HBox upperPart = new HBox();
+//        System.out.println("start");
+//
+//        VBox layout = new VBox();
+//        grid = new GridPane();
+//
+//        layout.getChildren().add(0, upperPart);
+//        layout.getChildren().add(1, grid);
+//        createGridMap();
+//        Scene scene = new Scene(layout, width, height);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//        if(this.map.animals().size() > 0) {
+//            new Thread(engine).start();
+////            Thread.sleep(2000);
+//        }
     }
 
     void createGridMap(){
@@ -115,7 +141,6 @@ public class App extends javafx.application.Application implements IGuiObserver 
         }
     }
 
-    //czasami znika czesc cukierkow - DO SPRAWDZENIA
     void drawObjects(GrassField map, GridPane grid){
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {
@@ -146,4 +171,109 @@ public class App extends javafx.application.Application implements IGuiObserver 
         createGridMap();
     }
 
+
+    @FXML
+    public Button closeButton;
+    @FXML
+    public void clickButton(ActionEvent event) throws Exception {
+        ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
+
+        if(treeVariant) {
+            this.map = new ForestedEquators(height, width, typeOfBounds, numberOfGrass);
+        }
+        else{
+            this.map = new ToxicCorpses(height, width, typeOfBounds, numberOfGrass);
+        }
+        Vector2d[] positions = positions(initAnimalNumber, height, width);
+        this.engine = new SimulationEngineGui(map, positions, initHP, birthCost, minHP, genLength, dailyNewGrass, animalBehaviour, minMutation, maxMutation, mutation, plantEnergy, this);
+
+        HBox upperPart = new HBox();
+        System.out.println("start");
+
+        VBox layout = new VBox();
+        grid = new GridPane();
+
+        layout.getChildren().add(0, upperPart);
+        layout.getChildren().add(1, grid);
+        createGridMap();
+        Scene scene = new Scene(layout, width, height);
+        Stage secondStage = new Stage();
+        secondStage.setScene(scene);
+        secondStage.show();
+        if(this.map.animals().size() > 0) {
+            new Thread(engine).start();
+            Thread.sleep(300);
+        }
+    }
+
+
+    public void setVariants() {
+        RadioButton selectedRadioButton = (RadioButton) toggle_behavior.getSelectedToggle();
+        animalBehaviour = selectedRadioButton.getText();
+        RadioButton selectedRadioButton1 = (RadioButton) toggle_map.getSelectedToggle();
+        if(Objects.equals(selectedRadioButton1.getText(), "Glob")){
+            typeOfBounds = 1;
+        }
+        else if(Objects.equals(selectedRadioButton1.getText(), "Hell portal")){
+            typeOfBounds = 2;
+        }
+        RadioButton selectedRadioButton2 = (RadioButton) toggle_grass.getSelectedToggle();
+        if(Objects.equals(selectedRadioButton2.getText(), "Forested equators")){
+            treeVariant = true;
+        }
+        else if((Objects.equals(selectedRadioButton2.getText(), "Toxic Corpses"))){
+            treeVariant = false;
+        }
+        RadioButton selectedRadioButton3 = (RadioButton) toggle_mutation.getSelectedToggle();
+        mutation = selectedRadioButton3.getText();
+    }
+
+
+    public void width(ActionEvent actionEvent) {
+        width = Integer.parseInt(width1.getText());
+    }
+
+    public void height(ActionEvent actionEvent) {
+        height = Integer.parseInt(height1.getText());
+    }
+
+    public void numberOfGrass(ActionEvent actionEvent) {
+        numberOfGrass = Integer.parseInt(numberOfGrass1.getText());
+    }
+
+    public void plantEnergy(ActionEvent actionEvent) {
+        plantEnergy = Integer.parseInt(plantEnergy1.getText());
+    }
+
+    public void dailyNewGrass(ActionEvent actionEvent) {
+        dailyNewGrass = Integer.parseInt(dailyNewGrass1.getText());
+    }
+
+    public void initHP(ActionEvent actionEvent) {
+        initHP = Integer.parseInt(initHP1.getText());
+    }
+
+    public void initAnimalNumber(ActionEvent actionEvent) {
+        initAnimalNumber = Integer.parseInt(initAnimalNumber1.getText());
+    }
+
+    public void minMutation(ActionEvent actionEvent) {
+        minMutation = Integer.parseInt(minMutation1.getText());
+    }
+
+    public void maxMutation(ActionEvent actionEvent) {
+        maxMutation = Integer.parseInt(maxMutation1.getText());
+    }
+
+    public void birthCost(ActionEvent actionEvent) {
+        birthCost = Integer.parseInt(birthCost1.getText());
+    }
+
+    public void genLength(ActionEvent actionEvent) {
+        genLength = Integer.parseInt(genLength1.getText());
+    }
+
+    public void minHP(ActionEvent actionEvent) {
+        minHP = Integer.parseInt(minHP1.getText());
+    }
 }

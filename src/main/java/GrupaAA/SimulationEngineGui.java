@@ -49,7 +49,7 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int animalIndex=0; animalIndex<allAnimals.size(); animalIndex++){
             Animal animal = allAnimals.get(animalIndex);
             sleepThread();
-            int genIndex =  /*day % */Genotypes.maxGenLength; //zrobic jakis random
+            int genIndex =  /*day % */Genotypes.maxGenLength - 1; //zrobic jakis random
             genIndex = Variants.animalBehavior(whichBehavior, genIndex);
             animal.move(animal.animalGens[genIndex]);
         }
