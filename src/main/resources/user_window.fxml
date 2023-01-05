@@ -65,28 +65,28 @@
                                 <Insets left="17.0" top="5.0" />
                             </padding>
                             <children>
-                                <RadioButton fx:id="RadioButton" minWidth="130.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="130.0" selected="true" text="Glob">
+                                <RadioButton fx:id="RadioButton" minWidth="130.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="130.0" selected="true" text="Glob" onAction="#setMap">
                                     <HBox.margin>
                                         <Insets />
                                     </HBox.margin>
                                     <toggleGroup>
                                         <ToggleGroup fx:id="toggle_map" />
                                     </toggleGroup></RadioButton>
-                                <RadioButton minWidth="135.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="135.0" selected="true" text="Forested equators">
+                                <RadioButton minWidth="135.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="135.0" selected="true" text="Forested equators" onAction="#setGrass">
                                     <HBox.margin>
                                         <Insets />
                                     </HBox.margin>
                                     <toggleGroup>
                                         <ToggleGroup fx:id="toggle_grass" />
                                     </toggleGroup></RadioButton>
-                                <RadioButton minWidth="145.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="140.0" selected="true" text="Full randomness">
+                                <RadioButton minWidth="145.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="140.0" selected="true" text="Full randomness" onAction="#setMutationVar">
                                     <HBox.margin>
                                         <Insets />
                                     </HBox.margin>
                                     <toggleGroup>
                                         <ToggleGroup fx:id="toggle_mutation" />
                                     </toggleGroup></RadioButton>
-                                <RadioButton minWidth="130.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="130.0" selected="true" text="Full predisposition">
+                                <RadioButton minWidth="130.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="130.0" selected="true" text="Full predisposition" onAction="#setVariants">
                                     <HBox.margin>
                                         <Insets />
                                     </HBox.margin>
@@ -101,10 +101,10 @@
                                 <Insets left="26.0" top="5.0" />
                             </padding>
                             <children>
-                                <RadioButton fx:id="RadioButton2" minWidth="122.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="124.0" text="Hell portal" toggleGroup="$toggle_map" />
-                                <RadioButton minWidth="130.0" mnemonicParsing="false" prefWidth="130.0" text="Toxic Corpses" toggleGroup="$toggle_grass" />
-                                <RadioButton minWidth="140.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="140.0" text="Slight correction" toggleGroup="$toggle_mutation" />
-                                <RadioButton minWidth="130.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="130.0" text="Some madness" toggleGroup="$toggle_behavior" />
+                                <RadioButton fx:id="RadioButton2" minWidth="122.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="124.0" text="Hell portal" toggleGroup="$toggle_map" onAction="#setMap"/>
+                                <RadioButton minWidth="130.0" mnemonicParsing="false" prefWidth="130.0" text="Toxic Corpses" toggleGroup="$toggle_grass" onAction="#setGrass"/>
+                                <RadioButton minWidth="140.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="140.0" text="Slight correction" toggleGroup="$toggle_mutation" onAction="#setMutationVar"/>
+                                <RadioButton minWidth="130.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="130.0" text="Some madness" toggleGroup="$toggle_behavior" onAction="#setVariants"/>
                             </children>
                         </HBox>
                         <Label alignment="CENTER" prefHeight="50.0" prefWidth="590.0" text="Enter parameters" textAlignment="CENTER">
@@ -122,7 +122,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="height1" onAction="#height" text="300" />
+                                <TextField fx:id="height1" text="20"  onAction="#height"/>
                             </children>
                             <padding>
                                 <Insets left="50.0" right="90.0" top="5.0" />
@@ -141,7 +141,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="width1" onAction="#width" text="300">
+                                <TextField fx:id="width1" onAction="#width" text="20">
                                     <HBox.margin>
                                         <Insets left="7.0" />
                                     </HBox.margin>
@@ -161,7 +161,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="numberOfGrass1" onAction="#numberOfGrass" text="10">
+                                <TextField fx:id="numberOfGrass1" onAction="#numberOfGrass" text="20">
                                     <HBox.margin>
                                         <Insets />
                                     </HBox.margin>
@@ -181,7 +181,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="plantEnergy1" onAction="#plantEnergy" text="5" />
+                                <TextField fx:id="plantEnergy1" onAction="#plantEnergy" text="2" />
                             </children>
                             <padding>
                                 <Insets left="50.0" right="90.0" top="5.0" />
@@ -213,7 +213,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="initHP1" onAction="#initHP" text="50" />
+                                <TextField fx:id="initHP1" onAction="#initHP" text="10" />
                             </children>
                             <padding>
                                 <Insets left="50.0" right="90.0" top="5.0" />
@@ -277,7 +277,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="birthCost1" onAction="#birthCost" text="30" />
+                                <TextField fx:id="birthCost1" onAction="#birthCost" text="5" />
                             </children>
                             <padding>
                                 <Insets left="50.0" right="90.0" top="5.0" />
@@ -293,7 +293,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="genLength1" onAction="#genLength" text="5" />
+                                <TextField fx:id="genLength1" onAction="#genLength" text="10" />
                             </children>
                             <padding>
                                 <Insets left="50.0" right="90.0" top="5.0" />
@@ -309,7 +309,7 @@
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="minHP1" onAction="#minHP" text="20" />
+                                <TextField fx:id="minHP1" onAction="#minHP" text="10" />
                             </children>
                             <padding>
                                 <Insets left="50.0" right="90.0" top="5.0" />

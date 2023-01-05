@@ -41,25 +41,29 @@ public class App extends javafx.application.Application implements IGuiObserver 
     public ToggleGroup toggle_mutation;
     public ToggleGroup toggle_behavior;
     public ToggleGroup toggle_map;
+
     private SimulationEngineGui engine;
     private GridPane grid;
     private GrassField map;
+
+    private int typeOfBounds = 1;   //1-glob, 2-hell portal
     private boolean treeVariant = true;   //true - forestedEquators, false - toxicCorpses
-    private int initAnimalNumber = 5;
+    private String mutation = "Random";
+    private String animalBehaviour = "Random";
+
     private int height = 20;
     private int width = 20;
-    private int typeOfBounds = 1;
-    private int numberOfGrass = 50;
-    private int genLength = 10;
-    private int initHP = 10;
-    private int birthCost = 5;
-    private int minHP = 10;
-    private int dailyNewGrass = 10;
-    private String animalBehaviour = "Random";
-    private int minMutation = 3;
-    private int maxMutation = 5;
-    private String mutation = "Random";
+    private int numberOfGrass = 20;
     private int plantEnergy = 2;
+    private int dailyNewGrass = 10;
+    private int initHP = 10;
+    private int initAnimalNumber = 5;
+    private int minMutation = 0;
+    private int maxMutation = 5;
+    private int birthCost = 5;
+    private int genLength = 10;
+    private int minHP = 10;
+
 
 
     public void init(){
@@ -95,6 +99,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
         primaryStage.setScene(new Scene(root));
         primaryStage.sizeToScene();
         primaryStage.show();
+
 //        HBox upperPart = new HBox();
 //        System.out.println("start");
 //
@@ -208,8 +213,16 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
 
     public void setVariants() {
-        RadioButton selectedRadioButton = (RadioButton) toggle_behavior.getSelectedToggle();
-        animalBehaviour = selectedRadioButton.getText();
+        RadioButton selectedRadioButton3 = (RadioButton) toggle_behavior.getSelectedToggle();
+        if(Objects.equals(selectedRadioButton3.getText(), "Full predisposition")){
+            mutation = " ";
+        }
+        else if(Objects.equals(selectedRadioButton3.getText(), "Some madness")){
+            mutation = "Random";
+        }
+    }
+
+    public void setMap(){
         RadioButton selectedRadioButton1 = (RadioButton) toggle_map.getSelectedToggle();
         if(Objects.equals(selectedRadioButton1.getText(), "Glob")){
             typeOfBounds = 1;
@@ -217,6 +230,9 @@ public class App extends javafx.application.Application implements IGuiObserver 
         else if(Objects.equals(selectedRadioButton1.getText(), "Hell portal")){
             typeOfBounds = 2;
         }
+    }
+
+    public void setGrass(){
         RadioButton selectedRadioButton2 = (RadioButton) toggle_grass.getSelectedToggle();
         if(Objects.equals(selectedRadioButton2.getText(), "Forested equators")){
             treeVariant = true;
@@ -224,10 +240,17 @@ public class App extends javafx.application.Application implements IGuiObserver 
         else if((Objects.equals(selectedRadioButton2.getText(), "Toxic Corpses"))){
             treeVariant = false;
         }
-        RadioButton selectedRadioButton3 = (RadioButton) toggle_mutation.getSelectedToggle();
-        mutation = selectedRadioButton3.getText();
     }
 
+    public void setMutationVar(){
+        RadioButton selectedRadioButton = (RadioButton) toggle_mutation.getSelectedToggle();
+        if(Objects.equals(selectedRadioButton.getText(), "Full randomness")){
+            animalBehaviour = "Random";
+        }
+        else if(Objects.equals(selectedRadioButton.getText(), "Slight correction")){
+            animalBehaviour = " ";
+        }
+    }
 
     public void width(ActionEvent actionEvent) {
         width = Integer.parseInt(width1.getText());
