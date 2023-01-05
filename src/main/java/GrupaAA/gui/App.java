@@ -24,7 +24,6 @@ import static java.lang.String.format;
 
 
 public class App extends javafx.application.Application implements IGuiObserver {
-    //Poprawić wywołanie setVariants() oraz zmienic warianty na Stringi
     public TextField width1;
     public TextField initAnimalNumber1;
     public TextField minHP1;
@@ -47,7 +46,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     private GrassField map;
 
     private int typeOfBounds = 1;   //1-glob, 2-hell portal
-    private boolean treeVariant = true;   //true - forestedEquators, false - toxicCorpses
+    private String treeVariant = "Forested equators";   //true - forestedEquators, false - toxicCorpses
     private String mutation = "Random";
     private String animalBehaviour = "Random";
 
@@ -128,8 +127,8 @@ public class App extends javafx.application.Application implements IGuiObserver 
     void drawHeader(GrassField map, GridPane grid){
         Label label = new Label("y\\x");
         grid.add(label, 0, 0);
-        grid.getColumnConstraints().add(new ColumnConstraints(20));
-        grid.getRowConstraints().add(new RowConstraints(20));
+        grid.getColumnConstraints().add(new ColumnConstraints(50));
+        grid.getRowConstraints().add(new RowConstraints(50));
         GridPane.setHalignment(label, HPos.CENTER);
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             label = new Label(format("%d", i));
@@ -183,7 +182,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     public void clickButton(ActionEvent event) throws Exception {
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
 
-        if(treeVariant) {
+        if(treeVariant.equals("Forested equators")) {
             this.map = new ForestedEquators(height, width, typeOfBounds, numberOfGrass);
         }
         else{
@@ -201,7 +200,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
         layout.getChildren().add(0, upperPart);
         layout.getChildren().add(1, grid);
         createGridMap();
-        Scene scene = new Scene(layout, width, height);
+        Scene scene = new Scene(layout, 600, 600);
         Stage secondStage = new Stage();
         secondStage.setScene(scene);
         secondStage.show();
@@ -214,12 +213,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
     public void setVariants() {
         RadioButton selectedRadioButton3 = (RadioButton) toggle_behavior.getSelectedToggle();
-        if(Objects.equals(selectedRadioButton3.getText(), "Full predisposition")){
-            mutation = " ";
-        }
-        else if(Objects.equals(selectedRadioButton3.getText(), "Some madness")){
-            mutation = "Random";
-        }
+        mutation = selectedRadioButton3.getText();
     }
 
     public void setMap(){
@@ -234,22 +228,12 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
     public void setGrass(){
         RadioButton selectedRadioButton2 = (RadioButton) toggle_grass.getSelectedToggle();
-        if(Objects.equals(selectedRadioButton2.getText(), "Forested equators")){
-            treeVariant = true;
-        }
-        else if((Objects.equals(selectedRadioButton2.getText(), "Toxic Corpses"))){
-            treeVariant = false;
-        }
+        treeVariant = selectedRadioButton2.getText();
     }
 
     public void setMutationVar(){
         RadioButton selectedRadioButton = (RadioButton) toggle_mutation.getSelectedToggle();
-        if(Objects.equals(selectedRadioButton.getText(), "Full randomness")){
-            animalBehaviour = "Random";
-        }
-        else if(Objects.equals(selectedRadioButton.getText(), "Slight correction")){
-            animalBehaviour = " ";
-        }
+        animalBehaviour = selectedRadioButton.getText();
     }
 
     public void width(ActionEvent actionEvent) {
