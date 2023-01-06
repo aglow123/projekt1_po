@@ -64,6 +64,8 @@ public class App extends javafx.application.Application implements IGuiObserver 
     private int minHP = 10;
 
 
+    public int row_length = 25;
+    public int column_length = 25;
 
     public void init(){
 //        if(treeVariant) {
@@ -133,14 +135,14 @@ public class App extends javafx.application.Application implements IGuiObserver 
         for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
             label = new Label(format("%d", i));
             grid.add(label, i - map.setBorders()[0].x + 1, 0);
-            grid.getColumnConstraints().add(new ColumnConstraints(20));
+            grid.getColumnConstraints().add(new ColumnConstraints(column_length));
             GridPane.setHalignment(label, HPos.CENTER);
 
         }
         for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {
             label = new Label(format("%d", j));
             grid.add(label, 0, map.setBorders()[1].y - j + 1);
-            grid.getRowConstraints().add(new RowConstraints(20));
+            grid.getRowConstraints().add(new RowConstraints(row_length));
             GridPane.setHalignment(label, HPos.CENTER);
         }
     }
@@ -177,8 +179,6 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
 
     @FXML
-    public Button closeButton;
-    @FXML
     public void clickButton(ActionEvent event) throws Exception {
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
 
@@ -200,7 +200,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
         layout.getChildren().add(0, upperPart);
         layout.getChildren().add(1, grid);
         createGridMap();
-        Scene scene = new Scene(layout, 600, 600);
+        Scene scene = new Scene(layout, 1.3*row_length*width, 1.3*column_length*width);
         Stage secondStage = new Stage();
         secondStage.setScene(scene);
         secondStage.show();
