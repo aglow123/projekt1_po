@@ -7,7 +7,7 @@ public class Animal implements IMapElement {
 
     private MapDirection orientation;
     private GrassField map;
-    int HP ;
+    public int HP ;
     int birthCost;
     int minHP;
     private Vector2d position;

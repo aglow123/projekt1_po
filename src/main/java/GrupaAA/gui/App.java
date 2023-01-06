@@ -64,8 +64,8 @@ public class App extends javafx.application.Application implements IGuiObserver 
     private int minHP = 10;
 
 
-    public int row_length = 25;
-    public int column_length = 25;
+    public int row_length = 30;
+    public int column_length = 30;
 
     public void init(){
 //        if(treeVariant) {
@@ -160,6 +160,8 @@ public class App extends javafx.application.Application implements IGuiObserver 
                 if(animalsToAdd != null){
                     for(Animal animalToAdd: animalsToAdd){
                         GuiElementBox box = new GuiElementBox(animalToAdd);
+                        float pom = (float)1/initHP;
+                        box.pb.setProgress(pom*animalToAdd.HP);
                         grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j + 1);
                         GridPane.setHalignment(box.vbox, HPos.CENTER);
                     }
