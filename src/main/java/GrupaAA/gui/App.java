@@ -9,13 +9,17 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -43,6 +47,8 @@ public class App extends javafx.application.Application implements IGuiObserver 
     private SimulationEngineGui engine;
     private GridPane grid;
     private GrassField map;
+
+    List<Image> images = new ArrayList<>();
 
     private int typeOfBounds = 1;   //1-glob, 2-hell portal
     private String treeVariant = "Forested equators";   //true - forestedEquators, false - toxicCorpses
@@ -125,14 +131,14 @@ public class App extends javafx.application.Application implements IGuiObserver 
             for (int j = map.setBorders()[0].y; j < map.setBorders()[1].y; j++) {
                 Grass grassToAdd = this.map.grassAt(new Vector2d(i, j));
                 if (grassToAdd != null) {
-                    GuiElementBox box = new GuiElementBox(grassToAdd);
+                    GuiElementBox box = new GuiElementBox(grassToAdd, images.get(8));
                     grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j);
                     GridPane.setHalignment(box.vbox, HPos.CENTER);
                 }
                 ArrayList<Animal> animalsToAdd = map.animalsAt(new Vector2d(i, j));
                 if(animalsToAdd != null){
                     for(Animal animalToAdd: animalsToAdd){
-                        GuiElementBox box = new GuiElementBox(animalToAdd);
+                        GuiElementBox box = new GuiElementBox(animalToAdd, images.get(Integer.parseInt(animalToAdd.getElementName().substring(0,1))));
                         float pom = (float)1/initHP;
                         box.pb.setProgress(pom*animalToAdd.HP);
                         grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j);
@@ -224,6 +230,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
         birthCost();
         genLength();
         minHP();
+        getImages();
     }
 
     public void width() {
@@ -272,5 +279,21 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
     public void minHP() {
         minHP = Integer.parseInt(minHP1.getText());
+    }
+
+    private void getImages() {
+        String fileAddress = "src/main/resources/";
+        for(int i = 0; i<8; i++){
+            try {
+                images.add(new Image(new FileInputStream(fileAddress + i + ".png")));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            images.add(new Image(new FileInputStream(fileAddress + "candy.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

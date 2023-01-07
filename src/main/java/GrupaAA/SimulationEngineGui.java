@@ -49,12 +49,13 @@ public class SimulationEngineGui extends SimulationEngine {
         ArrayList<Animal> allAnimals = map.animals();
         for(int animalIndex=0; animalIndex<allAnimals.size(); animalIndex++){
             Animal animal = allAnimals.get(animalIndex);
-            sleepThread();
             int genIndex =  new Random().nextInt(Genotypes.maxGenLength);
             genIndex = Variants.animalBehavior(whichBehavior, genIndex);
             animal.move(animal.animalGens[genIndex]);
         }
         Platform.runLater(this::reload);
+        sleepThread();
+
     }
 
     public void eatGrasses(){
@@ -62,12 +63,13 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int grassIndex=0; grassIndex<allGrasses.size(); grassIndex++){
             Grass grass = allGrasses.get(grassIndex);
             if(map.animals.get(grass.position) != null){
-                sleepThread();
                 findWinner(map.animals.get(grass.position),1).get(0).raiseHP(plantEnergy);
                 map.EatGrass(grass.position);
-                Platform.runLater(this::reload);
             }
         }
+        Platform.runLater(this::reload);
+        sleepThread();
+
     }
 
     public void makeBabies(){
@@ -75,12 +77,12 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int posIndex=0; posIndex<positions.size(); posIndex++){
             ArrayList<Animal> animalList = map.animalsOn(positions.get(posIndex));
             if(animalList.size() >= 2){
-                sleepThread();
                 ArrayList<Animal> parents = findWinner(animalList, 2);
                 parents.get(0).multiplication(parents.get(1), whichMutation, minMutation, maxMutation);
-                Platform.runLater(this::reload);
             }
         }
+        Platform.runLater(this::reload);
+        sleepThread();
     }
 
     public void plantDailyGrass(){
