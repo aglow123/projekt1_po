@@ -5,11 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
-    //parametry
-    int height;
-    int width;
-    int typeOfBounds;
 
+    int typeOfBounds;
     Vector2d lowerLeft, upperRight;
     public Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
     Map<Vector2d, Grass> grasses = new HashMap<>();
@@ -109,12 +106,11 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver{
         for(int animalIndex=0; animalIndex<allAnimals.size(); animalIndex++){
             Animal animal = allAnimals.get(animalIndex);
             if(animal.HP <= 0){
-//                if(corpsesList.containsKey(animal.getPosition()))
-//                    corpsesList.put(animal.getPosition(),corpsesList.get(animal.getPosition())+1);
-//                else {
-//                    corpsesList.put(animal.getPosition(), 1);
-//                }
-                corpsesList.put(animal.getPosition(),corpsesList.get(animal.getPosition())+1);
+                if(corpsesList.containsKey(animal.getPosition()))
+                    corpsesList.put(animal.getPosition(),corpsesList.get(animal.getPosition())+1);
+                else {
+                    corpsesList.put(animal.getPosition(), 1);
+                }
                 animals.get(animal.getPosition()).remove(animal);
                 if(animals.get(animal.getPosition()).size() == 0){
                     animals.remove(animal.getPosition());

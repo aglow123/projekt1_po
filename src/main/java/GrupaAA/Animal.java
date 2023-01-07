@@ -136,16 +136,16 @@ public class Animal implements IMapElement {
         if(!(position.follows(this.map.lowerLeft) & position.precedes(this.map.upperRight))){
             if(this.map.typeOfBounds == 1){
                 if(position.x < this.map.lowerLeft.x){
-                    position.x = position.x + this.map.upperRight.x + 1;
+                    position.x = position.x + this.map.upperRight.x;
                 }
-                else if(position.x > this.map.upperRight.x){
-                    position.x = position.x - this.map.upperRight.x - 1;
+                else if(position.x >= this.map.upperRight.x){
+                    position.x = position.x - this.map.upperRight.x;
                 }
                 if(position.y < this.map.lowerLeft.y){
                     position.y = position.y + 1;
                     this.turnAround();
                 }
-                else if(position.y > this.map.upperRight.y){
+                else if(position.y >= this.map.upperRight.y){
                     position.y = position.y - 1;
                     this.turnAround();
                 }

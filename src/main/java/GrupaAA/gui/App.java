@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -68,15 +67,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     public int column_length = 30;
 
     public void init(){
-//        if(treeVariant) {
-//            this.map = new ForestedEquators(height, width, typeOfBounds, numberOfGrass);
-//        }
-//        else{
-//            this.map = new ToxicCorpses(height, width, typeOfBounds, numberOfGrass);
-//        }
-//        Vector2d[] positions = positions(initAnimalNumber, height, width);
-//        this.engine = new SimulationEngineGui(map, positions, initHP, birthCost, minHP, genLength, dailyNewGrass, animalBehaviour, minMutation, maxMutation, mutation, plantEnergy, this);
-    }
+       }
 
     public Vector2d[] positions(int initAnimalNumber, int height, int width){
         Vector2d[] positions = new Vector2d[initAnimalNumber];
@@ -94,29 +85,11 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
     @Override
     public void start(Stage primaryStage) throws IllegalArgumentException, InterruptedException, IOException {
-
         URL url = new File("src/main/resources/user_window.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);
         primaryStage.setScene(new Scene(root));
         primaryStage.sizeToScene();
         primaryStage.show();
-
-//        HBox upperPart = new HBox();
-//        System.out.println("start");
-//
-//        VBox layout = new VBox();
-//        grid = new GridPane();
-//
-//        layout.getChildren().add(0, upperPart);
-//        layout.getChildren().add(1, grid);
-//        createGridMap();
-//        Scene scene = new Scene(layout, width, height);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//        if(this.map.animals().size() > 0) {
-//            new Thread(engine).start();
-////            Thread.sleep(2000);
-//        }
     }
 
     void createGridMap(){
@@ -132,28 +105,28 @@ public class App extends javafx.application.Application implements IGuiObserver 
         grid.getColumnConstraints().add(new ColumnConstraints(50));
         grid.getRowConstraints().add(new RowConstraints(50));
         GridPane.setHalignment(label, HPos.CENTER);
-        for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
+        for (int i = map.setBorders()[0].x; i < map.setBorders()[1].x; i++) {
             label = new Label(format("%d", i));
             grid.add(label, i - map.setBorders()[0].x + 1, 0);
             grid.getColumnConstraints().add(new ColumnConstraints(column_length));
             GridPane.setHalignment(label, HPos.CENTER);
 
         }
-        for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {
+        for (int j = map.setBorders()[0].y; j < map.setBorders()[1].y; j++) {
             label = new Label(format("%d", j));
-            grid.add(label, 0, map.setBorders()[1].y - j + 1);
+            grid.add(label, 0, map.setBorders()[1].y - j);
             grid.getRowConstraints().add(new RowConstraints(row_length));
             GridPane.setHalignment(label, HPos.CENTER);
         }
     }
 
     void drawObjects(GrassField map, GridPane grid){
-        for (int i = map.setBorders()[0].x; i <= map.setBorders()[1].x; i++) {
-            for (int j = map.setBorders()[0].y; j <= map.setBorders()[1].y; j++) {
+        for (int i = map.setBorders()[0].x; i < map.setBorders()[1].x; i++) {
+            for (int j = map.setBorders()[0].y; j < map.setBorders()[1].y; j++) {
                 Grass grassToAdd = this.map.grassAt(new Vector2d(i, j));
                 if (grassToAdd != null) {
                     GuiElementBox box = new GuiElementBox(grassToAdd);
-                    grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j + 1);
+                    grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j);
                     GridPane.setHalignment(box.vbox, HPos.CENTER);
                 }
                 ArrayList<Animal> animalsToAdd = map.animalsAt(new Vector2d(i, j));
@@ -162,13 +135,12 @@ public class App extends javafx.application.Application implements IGuiObserver 
                         GuiElementBox box = new GuiElementBox(animalToAdd);
                         float pom = (float)1/initHP;
                         box.pb.setProgress(pom*animalToAdd.HP);
-                        grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j + 1);
+                        grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j);
                         GridPane.setHalignment(box.vbox, HPos.CENTER);
                     }
                 }
             }
         }
-
     }
 
     @Override
@@ -183,6 +155,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     @FXML
     public void clickButton(ActionEvent event) throws Exception {
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
+        reloadParameters();
 
         if(treeVariant.equals("Forested equators")) {
             this.map = new ForestedEquators(height, width, typeOfBounds, numberOfGrass);
@@ -238,51 +211,66 @@ public class App extends javafx.application.Application implements IGuiObserver 
         animalBehaviour = selectedRadioButton.getText();
     }
 
-    public void width(ActionEvent actionEvent) {
+    public void reloadParameters(){
+        width();
+        height();
+        numberOfGrass();
+        plantEnergy();
+        dailyNewGrass();
+        initHP();
+        initAnimalNumber();
+        minMutation();
+        maxMutation();
+        birthCost();
+        genLength();
+        minHP();
+    }
+
+    public void width() {
         width = Integer.parseInt(width1.getText());
     }
 
-    public void height(ActionEvent actionEvent) {
+    public void height() {
         height = Integer.parseInt(height1.getText());
     }
 
-    public void numberOfGrass(ActionEvent actionEvent) {
+    public void numberOfGrass() {
         numberOfGrass = Integer.parseInt(numberOfGrass1.getText());
     }
 
-    public void plantEnergy(ActionEvent actionEvent) {
+    public void plantEnergy() {
         plantEnergy = Integer.parseInt(plantEnergy1.getText());
     }
 
-    public void dailyNewGrass(ActionEvent actionEvent) {
+    public void dailyNewGrass() {
         dailyNewGrass = Integer.parseInt(dailyNewGrass1.getText());
     }
 
-    public void initHP(ActionEvent actionEvent) {
+    public void initHP() {
         initHP = Integer.parseInt(initHP1.getText());
     }
 
-    public void initAnimalNumber(ActionEvent actionEvent) {
+    public void initAnimalNumber() {
         initAnimalNumber = Integer.parseInt(initAnimalNumber1.getText());
     }
 
-    public void minMutation(ActionEvent actionEvent) {
+    public void minMutation() {
         minMutation = Integer.parseInt(minMutation1.getText());
     }
 
-    public void maxMutation(ActionEvent actionEvent) {
+    public void maxMutation() {
         maxMutation = Integer.parseInt(maxMutation1.getText());
     }
 
-    public void birthCost(ActionEvent actionEvent) {
+    public void birthCost() {
         birthCost = Integer.parseInt(birthCost1.getText());
     }
 
-    public void genLength(ActionEvent actionEvent) {
+    public void genLength() {
         genLength = Integer.parseInt(genLength1.getText());
     }
 
-    public void minHP(ActionEvent actionEvent) {
+    public void minHP() {
         minHP = Integer.parseInt(minHP1.getText());
     }
 }

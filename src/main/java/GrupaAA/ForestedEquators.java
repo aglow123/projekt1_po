@@ -18,30 +18,31 @@ public class ForestedEquators extends GrassField{
 
     public void PlantGrass(){
         int widthOfEquator = this.upperRightEquator.y - this.lowerLeftEquator.y + 1;
-        boolean val = new Random().nextDouble() < 0.2;     //20% szans ze val is true to sadzimy poza rownikiem
+        Random rand = new Random();
+        double val = rand.nextDouble();     //20% szans ze val < 0.2, wtedy sadzimy poza rownikiem
         int x, y;
         Vector2d newPosition;
-        Random rand = new Random();
-        if(!val){
-            while(true) {
+        while(true){
+            if(val>= 0.2){
                 x = rand.nextInt(this.upperRightEquator.x);
                 y = rand.nextInt(widthOfEquator);
                 newPosition = new Vector2d(x, y + this.lowerLeftEquator.y);
-                if (!isPlanted(newPosition)){
-                    break;
+            }
+            else{
+                x = rand.nextInt(this.upperRight.x);
+                y = rand.nextInt(this.upperRight.y - this.upperRightEquator.y + this.lowerLeftEquator.y);
+                if(y>=this.lowerLeftEquator.y) {
+                    newPosition = new Vector2d(x, y + widthOfEquator - 1);
+                }
+                else{
+                    newPosition = new Vector2d(x,y);
                 }
             }
-        }
-        else{
-            while(true) {
-                x = rand.nextInt(this.upperRight.x);
-                y = rand.nextInt(this.upperRight.y);
-                if(y<this.lowerLeftEquator.y || y>this.upperRightEquator.y){
-                    newPosition = new Vector2d(x, y);
-                    if (!isPlanted(newPosition)){
-                        break;
-                    }
-                }
+            if (!isPlanted(newPosition)){
+                break;
+            }
+            else {
+                val = rand.nextDouble();
             }
         }
         Grass grass = new Grass(newPosition);

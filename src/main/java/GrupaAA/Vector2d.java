@@ -15,7 +15,7 @@ public class Vector2d {
         return "(" + x + "," + y + ")";
     }
     public boolean precedes(Vector2d other){
-        return (other != null) && (this.x <= other.x) && (this.y <= other.y);
+        return (other != null) && (this.x < other.x) && (this.y < other.y);
     }
 
     public boolean follows(Vector2d other){

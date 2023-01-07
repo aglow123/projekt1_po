@@ -2,6 +2,7 @@ package GrupaAA;
 
 import javafx.application.Platform;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SimulationEngineGui extends SimulationEngine {
     private final IGuiObserver observer;
@@ -37,7 +38,7 @@ public class SimulationEngineGui extends SimulationEngine {
 
     public void sleepThread(){
         try {
-            int moveDelay = 300;
+            int moveDelay = 500;
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
             System.out.println("interrupted exception on sleep");
@@ -49,7 +50,7 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int animalIndex=0; animalIndex<allAnimals.size(); animalIndex++){
             Animal animal = allAnimals.get(animalIndex);
             sleepThread();
-            int genIndex =  /*day % */Genotypes.maxGenLength - 1; //zrobic jakis random
+            int genIndex =  new Random().nextInt(Genotypes.maxGenLength);
             genIndex = Variants.animalBehavior(whichBehavior, genIndex);
             animal.move(animal.animalGens[genIndex]);
         }
@@ -74,7 +75,6 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int posIndex=0; posIndex<positions.size(); posIndex++){
             ArrayList<Animal> animalList = map.animalsOn(positions.get(posIndex));
             if(animalList.size() >= 2){
-//                System.out.println("makebabies");
                 sleepThread();
                 ArrayList<Animal> parents = findWinner(animalList, 2);
                 parents.get(0).multiplication(parents.get(1), whichMutation, minMutation, maxMutation);
