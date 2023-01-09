@@ -20,7 +20,6 @@ public class ToxicCorpses extends GrassField {
         Map<Vector2d, Integer> sorted_map = valueSort(filledList);
         Random rand = new Random();
         double val = rand.nextDouble();
-//        boolean val = new Random().nextDouble() < 0.2;
         int random_index;
         int corpses_number80 = (int)(0.8*filledList.size());
         int corpses_number20 = (int)(0.2*filledList.size());
@@ -58,11 +57,16 @@ public class ToxicCorpses extends GrassField {
         grasses.put(newPosition, grass);
     }
 
-    public Map<Vector2d, Integer> fillCorpsesMap(Map<Vector2d, Integer> corpsesList){
+    public Map<Vector2d, Integer> fillCorpsesMap(Map<Vector2d, ArrayList<Animal>> corpsesList){
         Map<Vector2d, Integer> filledList = new HashMap<>();
         for(int x = lowerLeft.x;x< upperRight.x; x++){
             for(int y=lowerLeft.y;y<upperRight.y;y++){
-                filledList.put(new Vector2d(x, y), corpsesList.getOrDefault(new Vector2d(x, y), 0));
+                if(!corpsesList.containsKey(new Vector2d(x, y))){
+                    filledList.put(new Vector2d(x, y), 0);
+                }
+                else {
+                    filledList.put(new Vector2d(x, y), (corpsesList.get(new Vector2d(x, y)).size()));
+                }
             }
         }
         return filledList;

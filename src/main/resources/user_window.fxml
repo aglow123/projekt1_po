@@ -320,6 +320,12 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="48.0" prefWidth="590.0">
                             <children>
+                                <RadioButton fx:id="stats_button" minWidth="130.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="130.0" text="Save statistics" onAction="#setSave">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="toggle_save" />
+                                    </toggleGroup></RadioButton>
+                                <RadioButton selected="true" minWidth="122.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="124.0" text="Do not save" toggleGroup="$toggle_save" onAction="#setSave"/>
+
                                 <Button fx:id="start_button" mnemonicParsing="false" onAction="#clickButton" text="Start Simulation" />
                             </children>
                         </HBox>

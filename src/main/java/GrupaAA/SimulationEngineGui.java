@@ -32,13 +32,13 @@ public class SimulationEngineGui extends SimulationEngine {
             makeBabies();
             plantDailyGrass();
             System.out.println(map.animals);
+            Platform.runLater(this::reload);
         }
-
     }
 
     public void sleepThread(){
         try {
-            int moveDelay = 500;
+            int moveDelay = 200;
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
             System.out.println("interrupted exception on sleep");
@@ -53,7 +53,7 @@ public class SimulationEngineGui extends SimulationEngine {
             genIndex = Variants.animalBehavior(whichBehavior, genIndex);
             animal.move(animal.animalGens[genIndex]);
         }
-        Platform.runLater(this::reload);
+//        Platform.runLater(this::reload);
         sleepThread();
 
     }
@@ -67,7 +67,7 @@ public class SimulationEngineGui extends SimulationEngine {
                 map.EatGrass(grass.position);
             }
         }
-        Platform.runLater(this::reload);
+//        Platform.runLater(this::reload);
         sleepThread();
 
     }
@@ -81,7 +81,7 @@ public class SimulationEngineGui extends SimulationEngine {
                 parents.get(0).multiplication(parents.get(1), whichMutation, minMutation, maxMutation);
             }
         }
-        Platform.runLater(this::reload);
+//        Platform.runLater(this::reload);
         sleepThread();
     }
 
@@ -94,5 +94,7 @@ public class SimulationEngineGui extends SimulationEngine {
                 break;
             }
         }
+//        Platform.runLater(this::reload);
+        sleepThread();
     }
 }
