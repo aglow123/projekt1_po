@@ -4,7 +4,6 @@ package GrupaAA;
  * The interface responsible for managing the moves of the animals.
  * Assumes that Vector2d and MoveDirection classes are defined.
  *
- * @author aglow123
  *
  */
 public interface IEngine {

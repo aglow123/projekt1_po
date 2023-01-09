@@ -7,11 +7,11 @@ import javafx.application.Application;
 
 public class World {
     public static void main(String[] args) {
-//        try {
+        try {
             Application.launch(App.class, args);
-//        } catch(Exception ex){
-//            out.println(ex.getMessage());
-//            out.println(ex.getClass());
-//        }
+        } catch(Exception ex){
+            out.println(ex.getMessage());
+            out.println(ex.getClass());
+        }
     }
 }

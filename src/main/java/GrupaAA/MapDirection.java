@@ -1,7 +1,5 @@
 package GrupaAA;
 
-import static java.lang.Math.sqrt;
-
 public enum MapDirection {
     NORTH,
     SOUTH,

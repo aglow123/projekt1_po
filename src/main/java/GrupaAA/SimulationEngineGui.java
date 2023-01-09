@@ -49,8 +49,7 @@ public class SimulationEngineGui extends SimulationEngine {
 
     public void sleepThread(int time){
         try {
-            int moveDelay = time;
-            Thread.sleep(moveDelay);
+            Thread.sleep(time);
         } catch (InterruptedException ex) {
             System.out.println("interrupted exception on sleep");
         }

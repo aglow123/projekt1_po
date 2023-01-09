@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class SimulationEngine implements IEngine, Runnable{
-    //parametry
     String whichBehavior;
     int minMutation;
     int maxMutation;

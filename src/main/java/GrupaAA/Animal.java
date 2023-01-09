@@ -1,7 +1,6 @@
 package GrupaAA;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Animal implements IMapElement {
@@ -105,10 +104,6 @@ public class Animal implements IMapElement {
         }
     }
 
-//    public boolean isAt(Vector2d position){
-//        return this.position.equals(position);
-//    }
-
     void addObserver(IPositionChangeObserver observer) {
         observers.add(observer);
     }
@@ -208,10 +203,6 @@ public class Animal implements IMapElement {
         this.eatenPlants += 1;
     }
 
-//    public void setPosition(Vector2d newPosition){
-//        this.position = newPosition;
-//    }
-
     public void multiplication(Animal animal1, String whichMutation, int minMutation, int maxMutation){
         if(animal1.HP>minHP && this.HP>minHP) {
             int setSide = Genotypes.intGenerator(2); //0-lewa, 1-prawa
@@ -223,8 +214,7 @@ public class Animal implements IMapElement {
             }
             int a1GensLength = (int)Math.round(a1Weight*animal1.animalGens.length);
             int thisGensLength = Genotypes.maxGenLength - a1GensLength;
-//            int thisGensLength = (int)Math.round(a2Weight*this.animalGens.length);
-//            int babyGensLength = thisGensLength+a1GensLength;
+
             int[] babyGens = new int[Genotypes.maxGenLength];
 
             if(animal1.HP>=this.HP) {
@@ -236,7 +226,7 @@ public class Animal implements IMapElement {
 
             int healthPoint = birthCost*2;
             animal1.loseHP(birthCost);
-            this.loseHP(birthCost); //zajmie miejsce rodzica w animals bo już jest taki klucz
+            this.loseHP(birthCost);
             Animal baby = new Animal(this.map, animal1.position, healthPoint, this.birthCost, this.minHP, Genotypes.maxGenLength);
             baby.animalGens = babyGens;
             animal1.children +=1;

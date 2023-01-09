@@ -14,7 +14,7 @@ public class MapVisualizer {
 
     /**
      * Initializes the MapVisualizer with an instance of map to visualize.
-     * @param map
+     * @param map map to visualize
      */
     public MapVisualizer(IWorldMap map) {
         this.map = map;
@@ -71,7 +71,7 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        String result = null;
+        String result;
         if (this.map.isOccupied(currentPosition)) {
             Object object = this.map.animalsAt(currentPosition);
             if (object != null) {

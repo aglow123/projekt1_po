@@ -20,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import javax.sound.midi.Sequence;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
@@ -450,7 +449,8 @@ public class App extends javafx.application.Application implements IGuiObserver 
             spy = false;
             animalToSpy = null;
             spyButton.setDisable(false);
-            stopSpyButton.setDisable(true);
+            stopSpyButton.setDisable(false);
+            drawObjects(map,grid);
         });
 
         showGensButton.setOnAction(e -> {
