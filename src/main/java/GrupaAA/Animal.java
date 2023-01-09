@@ -52,8 +52,8 @@ public class Animal implements IMapElement {
 
     public Vector2d getPosition(){return this.position;}
 
-    public String getAnimalGens(){
-        return Arrays.toString(this.animalGens);
+    public int[] getAnimalGens(){
+        return this.animalGens;
     }
 
     public int getHP(){

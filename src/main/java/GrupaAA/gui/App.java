@@ -1,7 +1,6 @@
 package GrupaAA.gui;
 
 import GrupaAA.*;
-import com.sun.javafx.image.IntPixelGetter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import javax.sound.midi.Sequence;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
@@ -66,6 +66,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     private Integer day = 1;
     private boolean save = false;
     private boolean spy = false;
+    private boolean highlight = false;
 //    private String text = "Select animal to spy";
 
     List<Image> images = new ArrayList<>();
@@ -159,7 +160,10 @@ public class App extends javafx.application.Application implements IGuiObserver 
                         box.pb.setProgress(pom*animalToAdd.getHP());
                         grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j);
                         GridPane.setHalignment(box.vbox, HPos.CENTER);
-                        if(animalToAdd == animalToSpy){
+                        if(highlight && contains(animalToAdd.getAnimalGens(), map.popularGenotype())){
+                            (box.vbox).setStyle("-fx-background-color:#ADD8E6;");
+                        }
+                        if(spy && animalToAdd == animalToSpy){
                             (box.vbox).setStyle("-fx-background-color:#f9f3c5;");
                         }
 
@@ -172,6 +176,15 @@ public class App extends javafx.application.Application implements IGuiObserver 
                 }
             }
         }
+    }
+
+    public boolean contains(final int[] array, final int key) {
+        for (final int i : array) {
+            if (i == key) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void createChart(){
@@ -209,7 +222,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
         label = new Label(String.valueOf(map.animals().size()));
         stats.add(label, 1, 0);
-        stats.getColumnConstraints().add(new ColumnConstraints(50));
+        stats.getColumnConstraints().add(new ColumnConstraints(100));
         GridPane.setHalignment(label, HPos.CENTER);
 
         stats.add(new Label("\tNumber of grasses: "), 0, 1);
@@ -253,7 +266,8 @@ public class App extends javafx.application.Application implements IGuiObserver 
 
             stats.add(new Label("\tGenome: "), 0, 7);
             stats.getRowConstraints().add(new RowConstraints(50));
-            label = new Label(animalToSpy.getAnimalGens());
+            label = new Label(Arrays.toString(animalToSpy.getAnimalGens()).replace(",", "")
+                    .replace("[", "").replace("]", ""));
             stats.add(label, 1, 7);
             GridPane.setHalignment(label, HPos.CENTER);
 
@@ -364,7 +378,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     }
 
     @FXML
-    public void clickButton(ActionEvent event) throws Exception {
+    public void clickButton(ActionEvent event){
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
         reloadParameters();
 
@@ -398,6 +412,14 @@ public class App extends javafx.application.Application implements IGuiObserver 
         stopSpyButton.setText("Stop spying animal");
         stopSpyButton.setDisable(true);
 
+        Button showGensButton = new Button();
+        showGensButton.setText("Highlight popular genotype");
+        showGensButton.setDisable(true);
+
+        Button stopShowGensButton = new Button();
+        stopShowGensButton.setText("Stop highlighting");
+        stopShowGensButton.setDisable(true);
+
         grid = new GridPane();
 
         startButton.setOnAction(e -> {
@@ -412,15 +434,15 @@ public class App extends javafx.application.Application implements IGuiObserver 
             startButton.setDisable(false);
             stopButton.setDisable(true);
             spyButton.setDisable(false);
+            showGensButton.setDisable(false);
+            showGensButton.setDisable(false);
         });
 
         spyButton.setOnAction(e -> {
             spy = true;
-
             if(animalToSpy != null){
                 spyButton.setDisable(true);
                 stopSpyButton.setDisable(false);
-                System.out.println(animalToSpy.getPosition());
             }
         });
 
@@ -431,11 +453,29 @@ public class App extends javafx.application.Application implements IGuiObserver 
             stopSpyButton.setDisable(true);
         });
 
+        showGensButton.setOnAction(e -> {
+            showGensButton.setDisable(true);
+            stopShowGensButton.setDisable(false);
+            highlight = true;
+            drawObjects(map, grid);
+        });
+
+        stopShowGensButton.setOnAction(e -> {
+            showGensButton.setDisable(false);
+            stopShowGensButton.setDisable(true);
+            highlight = false;
+            grid.getRowConstraints().clear();
+            grid.getColumnConstraints().clear();
+            grid.getChildren().retainAll(grid.getChildren().get(0));
+            createGridMap();
+        });
 
         hbox1.getChildren().add(0, startButton);
         hbox1.getChildren().add(1, stopButton);
         hbox1.getChildren().add(2, spyButton);
         hbox1.getChildren().add(3, stopSpyButton);
+        hbox1.getChildren().add(4, showGensButton);
+        hbox1.getChildren().add(5, stopShowGensButton);
         hbox1.setPadding(new Insets(0,20,0,20));
         hbox1.setSpacing(15);
 
