@@ -8,9 +8,10 @@ import static GrupaAA.ToxicCorpses.valueSort;
 
 public abstract class GrassField implements IWorldMap, IPositionChangeObserver {
 
+    int day;
     int typeOfBounds;
     Vector2d lowerLeft, upperRight;
-    public Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
+    Map<Vector2d, ArrayList<Animal>> animals = new HashMap<>();
     Map<Vector2d, Grass> grasses = new HashMap<>();
     Map<Vector2d, ArrayList<Animal>> corpsesList = new HashMap<>();
 
@@ -89,7 +90,6 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver {
         return (int) gens.keySet().toArray()[0];
     }
 
-
     public double averageHP(){
         int amount = animals().size();
         if(amount == 0){
@@ -129,6 +129,7 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver {
         Vector2d[] borders = setBorders();
         return new MapVisualizer(this).draw(borders[0], borders[1]);
     }
+
     public Vector2d[] setBorders(){
         return new Vector2d[]{this.lowerLeft, this.upperRight};
     }
@@ -170,6 +171,10 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver {
         return new ArrayList<>(grasses.values());
     }
 
+    public void nextDay(){
+        this.day += 1;
+    }
+
     @Override
     public void cleanDeadAnimal(){
         ArrayList<Animal> allAnimals = animals();
@@ -185,6 +190,8 @@ public abstract class GrassField implements IWorldMap, IPositionChangeObserver {
                     animals.remove(animal.getPosition());
                 }
                 animal.removeObserver(this);
+                animal.dayOfDeath = day;
+                animal.isAlive = false;
             }
         }
     }

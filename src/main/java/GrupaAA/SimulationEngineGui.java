@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class SimulationEngineGui extends SimulationEngine {
     private final IGuiObserver observer;
+    private volatile boolean running = true;
 
     public SimulationEngineGui(GrassField map, Vector2d[] positions, int initHP, int birthCost, int minHP, int genLength, int dailyNewGrass, String animalBehaviour, int minMutation, int maxMutation, String mutation, int plantEnergy, IGuiObserver observer){
         super(map, positions, initHP, birthCost, minHP, genLength);
@@ -18,27 +19,37 @@ public class SimulationEngineGui extends SimulationEngine {
         this.observer = observer;
     }
 
-    void reload(){
+    public void reload(){
         this.observer.reload();
     }
 
+    public void suspend(){
+        this.running = false;
+    }
+
+    public void resume(){
+        this.running = true;
+    }
+
+
     @Override
     public void run() {
-        Platform.runLater(this::reload);
         while(this.map.animals().size() > 0) {
+            Platform.runLater(this::reload);
             map.cleanDeadAnimal();
             moveAnimals();
             eatGrasses();
             makeBabies();
             plantDailyGrass();
             System.out.println(map.animals);
-            Platform.runLater(this::reload);
+            sleepThread(1000);
+            while(!running){}
         }
     }
 
-    public void sleepThread(){
+    public void sleepThread(int time){
         try {
-            int moveDelay = 200;
+            int moveDelay = time;
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
             System.out.println("interrupted exception on sleep");
@@ -51,10 +62,10 @@ public class SimulationEngineGui extends SimulationEngine {
             Animal animal = allAnimals.get(animalIndex);
             int genIndex =  new Random().nextInt(Genotypes.maxGenLength);
             genIndex = Variants.animalBehavior(whichBehavior, genIndex);
+            animal.activatedGen = animal.animalGens[genIndex];
             animal.move(animal.animalGens[genIndex]);
         }
-//        Platform.runLater(this::reload);
-        sleepThread();
+        sleepThread(200);
 
     }
 
@@ -63,12 +74,11 @@ public class SimulationEngineGui extends SimulationEngine {
         for(int grassIndex=0; grassIndex<allGrasses.size(); grassIndex++){
             Grass grass = allGrasses.get(grassIndex);
             if(map.animals.get(grass.position) != null){
-                findWinner(map.animals.get(grass.position),1).get(0).raiseHP(plantEnergy);
+                findWinner(map.animals.get(grass.position),1).get(0).eatPlant(plantEnergy);
                 map.EatGrass(grass.position);
             }
         }
-//        Platform.runLater(this::reload);
-        sleepThread();
+        sleepThread(200);
 
     }
 
@@ -81,8 +91,7 @@ public class SimulationEngineGui extends SimulationEngine {
                 parents.get(0).multiplication(parents.get(1), whichMutation, minMutation, maxMutation);
             }
         }
-//        Platform.runLater(this::reload);
-        sleepThread();
+        sleepThread(200);
     }
 
     public void plantDailyGrass(){
@@ -94,7 +103,6 @@ public class SimulationEngineGui extends SimulationEngine {
                 break;
             }
         }
-//        Platform.runLater(this::reload);
-        sleepThread();
+        sleepThread(200);
     }
 }

@@ -10,6 +10,7 @@ public class ToxicCorpses extends GrassField {
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(width, height);
         this.typeOfBounds = typeOfBounds;
+        this.day = 1;
         this.filledList = fillCorpsesMap(corpsesList);
         for (int i = 0; i < numberOfGrass; i++) {
             PlantGrass();

@@ -1,19 +1,25 @@
 package GrupaAA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Animal implements IMapElement {
 
     private MapDirection orientation;
     private GrassField map;
-    public int HP ;
+    int HP ;
     int birthCost;
     int minHP;
     private Vector2d position;
-    public int[] animalGens;
+    int[] animalGens;
     int age;
     int children;
+    int activatedGen;
+    int eatenPlants;
+    int dayOfDeath;
+    public boolean isAlive;
+
     private final ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(GrassField map, Vector2d initialPosition, int initHP, int birthCost, int minHP, int genLength){
@@ -27,15 +33,45 @@ public class Animal implements IMapElement {
         this.animalGens = genotypes.genotypes;
         this.age = 0;
         this.children = 0;
+        this.eatenPlants = 0;
+        this.isAlive = true;
         map.place(this);
     }
 
     public String toString(){
         return String.valueOf(this.HP);
     }
-//    public MapDirection getOrientation(){return this.orientation;}
+
+    public int getActivatedGen(){
+        return this.activatedGen;
+    }
+
+    public int getEatenPlants(){
+        return this.eatenPlants;
+    }
 
     public Vector2d getPosition(){return this.position;}
+
+    public String getAnimalGens(){
+        return Arrays.toString(this.animalGens);
+    }
+
+    public int getHP(){
+        return this.HP;
+    }
+
+    public int getChildren(){
+        return this.children;
+    }
+
+    public int getAge(){
+        return this.age;
+    }
+
+    public Integer getDayOfDeath(){
+        return this.dayOfDeath;
+    }
+
     @Override
     public String getElementName() {
         switch (this.orientation) {
@@ -69,9 +105,9 @@ public class Animal implements IMapElement {
         }
     }
 
-    public boolean isAt(Vector2d position){
-        return this.position.equals(position);
-    }
+//    public boolean isAt(Vector2d position){
+//        return this.position.equals(position);
+//    }
 
     void addObserver(IPositionChangeObserver observer) {
         observers.add(observer);
@@ -167,11 +203,14 @@ public class Animal implements IMapElement {
         this.HP -= points;
     }
 
-
-    public void setPosition(Vector2d newPosition){
-        this.position = newPosition;
+    public void eatPlant(int plantEnergy){
+        raiseHP(plantEnergy);
+        this.eatenPlants += 1;
     }
 
+//    public void setPosition(Vector2d newPosition){
+//        this.position = newPosition;
+//    }
 
     public void multiplication(Animal animal1, String whichMutation, int minMutation, int maxMutation){
         if(animal1.HP>minHP && this.HP>minHP) {
@@ -206,6 +245,7 @@ public class Animal implements IMapElement {
         }
 
     }
+
     public void setChildrenGens(Animal parent1, Animal parent2, int[] childrenGens, int length1, int length2, int random){
         int[] temp;
         if(random==0){
@@ -217,6 +257,7 @@ public class Animal implements IMapElement {
         System.arraycopy(parent1.animalGens, 0, childrenGens, 0, length1);
         System.arraycopy(temp, 0, childrenGens, length1, length2);
     }
+
     public static int[] reverse(int[] data) {
         for (int left = 0, right = data.length - 1; left < right; left++, right--) {
             int temp = data[left];

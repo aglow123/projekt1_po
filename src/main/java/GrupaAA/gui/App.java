@@ -1,6 +1,7 @@
 package GrupaAA.gui;
 
 import GrupaAA.*;
+import com.sun.javafx.image.IntPixelGetter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,21 +20,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 import static java.lang.String.format;
-
 
 public class App extends javafx.application.Application implements IGuiObserver {
     public TextField width1;
@@ -56,6 +51,10 @@ public class App extends javafx.application.Application implements IGuiObserver 
     public ToggleGroup toggle_save;
     public Button start_button;
 
+    public static final String DATE_FORMAT_NOW = "yyyyMMddHHmmss";
+    private String filename;
+    private Animal animalToSpy;
+
     private SimulationEngineGui engine;
     private GridPane grid;
     private GridPane stats;
@@ -64,8 +63,10 @@ public class App extends javafx.application.Application implements IGuiObserver 
     private LineChart<Integer, Integer> grassChart;
     private XYChart.Series<Integer, Integer> datasetAnimal = new XYChart.Series<>();
     private XYChart.Series<Integer, Integer> datasetGrass = new XYChart.Series<>();
-    private int day = 1;
+    private Integer day = 1;
     private boolean save = false;
+    private boolean spy = false;
+//    private String text = "Select animal to spy";
 
     List<Image> images = new ArrayList<>();
 
@@ -105,7 +106,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
     }
 
     @Override
-    public void start(Stage primaryStage) throws IllegalArgumentException, InterruptedException, IOException {
+    public void start(Stage primaryStage) throws IllegalArgumentException, IOException {
         URL url = new File("src/main/resources/user_window.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);
         primaryStage.setScene(new Scene(root));
@@ -155,9 +156,18 @@ public class App extends javafx.application.Application implements IGuiObserver 
                     for(Animal animalToAdd: animalsToAdd){
                         GuiElementBox box = new GuiElementBox(animalToAdd, images.get(Integer.parseInt(animalToAdd.getElementName().substring(0,1))));
                         float pom = (float)1/initHP;
-                        box.pb.setProgress(pom*animalToAdd.HP);
+                        box.pb.setProgress(pom*animalToAdd.getHP());
                         grid.add(box.vbox, i - map.setBorders()[0].x + 1, map.setBorders()[1].y - j);
                         GridPane.setHalignment(box.vbox, HPos.CENTER);
+                        if(animalToAdd == animalToSpy){
+                            (box.vbox).setStyle("-fx-background-color:#f9f3c5;");
+                        }
+
+                        (box.vbox).setDisable(spy);
+                        (box.vbox).setOnMouseClicked(e -> {
+                            animalToSpy = animalToAdd;
+                            (box.vbox).setStyle("-fx-background-color:#f9f3c5;");
+                        });
                     }
                 }
             }
@@ -231,6 +241,61 @@ public class App extends javafx.application.Application implements IGuiObserver 
         label = new Label(String.format("%.2f", map.averageAge()));
         stats.add(label, 1, 5);
         GridPane.setHalignment(label, HPos.CENTER);
+
+        if(spy){
+            stats.add(new Label("\tPosition of animal to spy: "), 0, 6);
+            stats.getRowConstraints().add(new RowConstraints(50));
+            if(animalToSpy.isAlive) {
+                label = new Label(animalToSpy.getPosition().x + ", " + animalToSpy.getPosition().y);
+                stats.add(label, 1, 6);
+                GridPane.setHalignment(label, HPos.CENTER);
+            }
+
+            stats.add(new Label("\tGenome: "), 0, 7);
+            stats.getRowConstraints().add(new RowConstraints(50));
+            label = new Label(animalToSpy.getAnimalGens());
+            stats.add(label, 1, 7);
+            GridPane.setHalignment(label, HPos.CENTER);
+
+            stats.add(new Label("\tActivated gen: "), 0, 8);
+            stats.getRowConstraints().add(new RowConstraints(50));
+            if(animalToSpy.isAlive) {
+                label = new Label(String.valueOf(animalToSpy.getActivatedGen()));
+                stats.add(label, 1, 8);
+                GridPane.setHalignment(label, HPos.CENTER);
+            }
+
+            stats.add(new Label("\tHP: "), 0, 9);
+            stats.getRowConstraints().add(new RowConstraints(50));
+            label = new Label(String.valueOf(animalToSpy.getHP()));
+            stats.add(label, 1, 9);
+            GridPane.setHalignment(label, HPos.CENTER);
+
+            stats.add(new Label("\tEaten plants: "), 0, 10);
+            stats.getRowConstraints().add(new RowConstraints(50));
+            label = new Label(String.valueOf(animalToSpy.getEatenPlants()));
+            stats.add(label, 1, 10);
+            GridPane.setHalignment(label, HPos.CENTER);
+
+            stats.add(new Label("\tNumber of children: "), 0, 11);
+            stats.getRowConstraints().add(new RowConstraints(50));
+            label = new Label(String.valueOf(animalToSpy.getChildren()));
+            stats.add(label, 1, 11);
+            GridPane.setHalignment(label, HPos.CENTER);
+
+            if(animalToSpy.isAlive) {
+                stats.add(new Label("\tAge: "), 0, 12);
+                stats.getRowConstraints().add(new RowConstraints(50));
+                label = new Label(String.valueOf(animalToSpy.getAge()));
+            }
+            else{
+                stats.add(new Label("\tDay of death: "), 0, 12);
+                stats.getRowConstraints().add(new RowConstraints(50));
+                label = new Label(String.valueOf(animalToSpy.getDayOfDeath()));
+            }
+            stats.add(label, 1, 12);
+            GridPane.setHalignment(label, HPos.CENTER);
+        }
     }
 
     public void createCSV(){
@@ -245,12 +310,17 @@ public class App extends javafx.application.Application implements IGuiObserver 
                         .append(map.grasses().size()).append(",").append(map.howManyFreeFields()).append(",")
                         .append(map.popularGenotype()).append(",").append(map.averageHP()).append(",")
                         .append(map.averageAge()).append("\n");
-
-        try ( FileWriter fileWriter = new FileWriter("C:\\TEMP\\stat.csv") ) {
+        try ( FileWriter fileWriter = new FileWriter(filename) ) {
             fileWriter.write(stringBuilder.toString());
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static String now() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        return sdf.format(cal.getTime());
     }
 
     public void updateCSV(){
@@ -261,16 +331,20 @@ public class App extends javafx.application.Application implements IGuiObserver 
                 .append(map.popularGenotype()).append(",").append(map.averageHP()).append(",")
                 .append(map.averageAge()).append("\n");
 
-        try ( FileWriter fileWriter = new FileWriter("C:\\TEMP\\stat.csv", true) ) {
+        try ( FileWriter fileWriter = new FileWriter(filename, true) ) {
             fileWriter.write(stringBuilder.toString());
         } catch(Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    public void nextDay(){
+        day += 1;
+        map.nextDay();
+    }
     @Override
     public void reload(){
-        day += 1;
+        nextDay();
 
         grid.getRowConstraints().clear();
         grid.getColumnConstraints().clear();
@@ -289,7 +363,6 @@ public class App extends javafx.application.Application implements IGuiObserver 
         }
     }
 
-
     @FXML
     public void clickButton(ActionEvent event) throws Exception {
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
@@ -305,9 +378,70 @@ public class App extends javafx.application.Application implements IGuiObserver 
         this.engine = new SimulationEngineGui(map, positions, initHP, birthCost, minHP, genLength, dailyNewGrass, animalBehaviour, minMutation, maxMutation, mutation, plantEnergy, this);
 
         HBox hbox = new HBox();
+        HBox hbox1 = new HBox();
         VBox vbox = new VBox();
+        VBox vbox1 = new VBox();
         VBox vbox2 = new VBox();
+
+        Button startButton = new Button();
+        startButton.setText("Start");
+        startButton.setDisable(true);
+
+        Button stopButton = new Button();
+        stopButton.setText("Stop");
+
+        Button spyButton = new Button();
+        spyButton.setText("Spy animal");
+        spyButton.setDisable(true);
+
+        Button stopSpyButton = new Button();
+        stopSpyButton.setText("Stop spying animal");
+        stopSpyButton.setDisable(true);
+
         grid = new GridPane();
+
+        startButton.setOnAction(e -> {
+            engine.resume();
+            startButton.setDisable(true);
+            stopButton.setDisable(false);
+            spyButton.setDisable(true);
+        });
+
+        stopButton.setOnAction(e -> {
+            engine.suspend();
+            startButton.setDisable(false);
+            stopButton.setDisable(true);
+            spyButton.setDisable(false);
+        });
+
+        spyButton.setOnAction(e -> {
+            spy = true;
+
+            if(animalToSpy != null){
+                spyButton.setDisable(true);
+                stopSpyButton.setDisable(false);
+                System.out.println(animalToSpy.getPosition());
+            }
+        });
+
+        stopSpyButton.setOnAction(e -> {
+            spy = false;
+            animalToSpy = null;
+            spyButton.setDisable(false);
+            stopSpyButton.setDisable(true);
+        });
+
+
+        hbox1.getChildren().add(0, startButton);
+        hbox1.getChildren().add(1, stopButton);
+        hbox1.getChildren().add(2, spyButton);
+        hbox1.getChildren().add(3, stopSpyButton);
+        hbox1.setPadding(new Insets(0,20,0,20));
+        hbox1.setSpacing(15);
+
+        vbox.getChildren().add(0, hbox1);
+        vbox.getChildren().add(1, grid);
+
 
         final NumberAxis xAxisAnimal = new NumberAxis();
         final NumberAxis yAxisAnimal = new NumberAxis();
@@ -317,15 +451,18 @@ public class App extends javafx.application.Application implements IGuiObserver 
         final NumberAxis yAxisGrass = new NumberAxis();
         xAxisGrass.setLabel("Day");
         grassChart = new LineChart(xAxisGrass, yAxisGrass);
-        stats = new GridPane();
 
-        vbox.getChildren().add(0, animalChart);
-        vbox.getChildren().add(1, grassChart);
+        vbox1.getChildren().add(0, animalChart);
+        vbox1.getChildren().add(1, grassChart);
+
+
+        stats = new GridPane();
 
         vbox2.getChildren().add(0, stats);
 
-        hbox.getChildren().add(0, grid);
-        hbox.getChildren().add(1, vbox);
+
+        hbox.getChildren().add(0, vbox);
+        hbox.getChildren().add(1, vbox1);
         hbox.getChildren().add(2, vbox2);
 
         createGridMap();
@@ -335,6 +472,7 @@ public class App extends javafx.application.Application implements IGuiObserver 
         createStats();
 
         if(save){
+            filename = "C:\\TEMP\\stat" + now() + ".csv";
             createCSV();
         }
 
@@ -342,12 +480,9 @@ public class App extends javafx.application.Application implements IGuiObserver 
         Stage secondStage = new Stage();
         secondStage.setScene(scene);
         secondStage.show();
-        if(this.map.animals().size() > 0) {
-            new Thread(engine).start();
-            Thread.sleep(300);
-        }
-    }
 
+        new Thread(engine).start();
+    }
 
     public void setVariants() {
         RadioButton selectedRadioButton3 = (RadioButton) toggle_behavior.getSelectedToggle();
